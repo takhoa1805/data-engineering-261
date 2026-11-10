@@ -186,7 +186,7 @@
 
 \textbf{Hệ thống đã thực hiện của nhóm.} Web app: \url{https://cinelake.hunglechpro.id.vn} \textperiodcentered{} Databricks \textperiodcentered{} Neon PostgreSQL
 
-CineLake là một nền tảng xem, chấm điểm và khám phá phim. Đồ án xây dựng phần kỹ thuật dữ liệu phía sau nền tảng đó: một lakehouse trên Databricks thu dữ liệu từ bốn nguồn (MovieLens 32M với 32 triệu rating thật, TMDB, IMDb và database của web app), làm sạch, kiểm soát chất lượng, rồi phục vụ 8 yêu cầu nghiệp vụ (BR) cho năm nhóm người dùng: 3 BR trên web app cho người xem và 5 BR trên dashboard cho các đội nội bộ. Thay đổi trên app được đưa vào lakehouse liên tục bằng kỹ thuật CDC (Debezium và Kafka); dữ liệu đi qua ba tầng bronze, silver, gold và 45 DQ check trước khi tới người dùng.
+CineLake là một nền tảng xem, chấm điểm và khám phá phim. Đồ án xây dựng phần kỹ thuật dữ liệu phía sau nền tảng đó: một lakehouse trên Databricks thu dữ liệu từ bốn nguồn (MovieLens 32M với 32 triệu rating thật, TMDB, IMDb và database của web app), làm sạch, kiểm soát chất lượng, rồi phục vụ 8 yêu cầu nghiệp vụ (BR) cho năm nhóm người dùng: 3 BR trên web app cho người xem và 5 BR trên dashboard cho các các bộ phận nội bộ. Thay đổi trên app được đưa vào lakehouse liên tục bằng kỹ thuật CDC (Debezium và Kafka); dữ liệu đi qua ba tầng bronze, silver, gold và 45 DQ check trước khi tới người dùng.
 
 Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check đạt; 789.359 rating đi qua đường CDC khớp từng dòng với dữ liệu gốc; một vòng xử lý lakehouse mất 7,6 phút; gợi ý cá nhân đạt hit rate@10 20,43\% so với 17,19\% của cách gợi ý phim phổ biến. Cả 8 BR đều được ứng dụng trả lời đúng trong kịch bản kiểm thử.
 
@@ -208,7 +208,7 @@ Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check
 
 \subsection{Bối cảnh}\label{sec:1.1}
 
-Một nền tảng phim sống nhờ người xem tìm được phim hợp gu, xem trọn vẹn và quay lại. Để làm được việc đó, cùng một nguồn dữ liệu phải phục vụ hai nơi: người xem cần gợi ý ngay trên app, còn các đội nội bộ cần số liệu để quyết định. Nhóm lấy cảm hứng từ cách Netflix tách xử lý dữ liệu thành tầng offline (tính trước) và tầng online (tính ngay lúc người dùng hỏi), rồi xây một phiên bản thu nhỏ chạy được trên hạ tầng miễn phí.
+Một nền tảng phim sống nhờ người xem tìm được phim hợp gu, xem trọn vẹn và quay lại. Để làm được việc đó, cùng một nguồn dữ liệu phải phục vụ hai nơi: người xem cần gợi ý ngay trên app, còn các internal teams (các bộ phận nội bộ ) cần số liệu để quyết định. Nhóm lấy cảm hứng từ cách Netflix tách xử lý dữ liệu thành tầng offline (tính trước) và tầng online (tính ngay lúc người dùng hỏi), rồi xây một phiên bản thu nhỏ chạy được trên hạ tầng miễn phí.
 
 CineLake là nền tảng xem, chấm điểm và khám phá phim, ra mắt ngày 28/12/2025 với đủ tính năng: chấm điểm, xem phim, tìm kiếm, lưu phim vào My list và gửi phản hồi. Trọng tâm của đồ án là phần kỹ thuật dữ liệu: đưa dữ liệu từ nguồn bên ngoài và từ database của app vào lakehouse, làm sạch và mô hình hoá, kiểm soát chất lượng, rồi đưa kết quả ngược lại cho app và dashboard.
 
@@ -261,7 +261,7 @@ Ngoài phạm vi: thanh toán và dữ liệu xem phim thật (MovieLens không 
 
 \subsection{Người dùng dữ liệu}\label{sec:2.1}
 
-Dữ liệu của CineLake được dùng ở hai nơi: web app cho người xem, và dashboard Databricks cho các đội nội bộ.
+Dữ liệu của CineLake được dùng ở hai nơi: web app cho người xem, và dashboard Databricks cho các các bộ phận nội bộ.
 
 \begingroup
 \small
@@ -548,7 +548,7 @@ Nhờ có sẵn bộ điều phối, nhóm không phải dựng thêm Airflow. C
 
 AI/BI Dashboard là công cụ BI tích hợp trong Databricks: mỗi widget là một truy vấn SQL chạy trên SQL warehouse, hiển thị thành biểu đồ, bảng hay ô chỉ số, kèm bộ lọc cho người xem. Dashboard có thể được định nghĩa bằng file và triển khai cùng Asset Bundles.
 
-Vì dashboard đọc thẳng bảng gold, nhóm không phải chép dữ liệu sang công cụ BI khác, và quyền xem đi theo Unity Catalog. CineLake có hai dashboard: dashboard phân tích đáp ứng BR4--BR8 cho các đội nội bộ, và dashboard vận hành theo dõi CDC, pipeline và chất lượng dữ liệu cho đội dữ liệu.
+Vì dashboard đọc thẳng bảng gold, nhóm không phải chép dữ liệu sang công cụ BI khác, và quyền xem đi theo Unity Catalog. CineLake có hai dashboard: dashboard phân tích đáp ứng BR4--BR8 cho các các bộ phận nội bộ, và dashboard vận hành theo dõi CDC, pipeline và chất lượng dữ liệu cho đội dữ liệu.
 
 \subsubsection*{Cách khai thác dữ liệu cho ứng dụng}
 
@@ -578,7 +578,7 @@ Trả lời web app trong mili giây & PostgreSQL & Database giao dịch, dữ l
 Record linkage, làm sạch, giữ toàn bộ lịch sử & Lakehouse (Spark, Delta) & Khối lượng lớn, cần xử lý phân tán \\
 Tính trước việc nặng (độ giống giữa 83 nghìn phim) & Lakehouse, rồi chép về PostgreSQL & Tính một lần, đọc nhiều lần \\
 Phản ứng với hành động vừa xảy ra & Hàm SQL trong PostgreSQL & Không phải chờ một vòng lakehouse \\
-Phân tích cho đội nội bộ & Dashboard đọc tầng gold & Bảng đã tổng hợp sẵn \\
+Phân tích cho các bộ phận nội bộ & Dashboard đọc tầng gold & Bảng đã tổng hợp sẵn \\
 \end{longtable}
 \endgroup
 
@@ -586,7 +586,7 @@ Phân tích cho đội nội bộ & Dashboard đọc tầng gold & Bảng đã t
 
 \subsection{Kiến trúc tổng thể}\label{sec:3.2}
 
-Các công nghệ ở mục 3.1 được ghép thành một vòng dữ liệu khép kín. Người dùng thao tác trên web app, thao tác được ghi vào database PostgreSQL; CDC đưa từng thay đổi vào lakehouse trên Databricks; lakehouse tính kết quả rồi chép ngược về PostgreSQL cho web app đọc, và đưa lên dashboard cho các đội nội bộ. Dữ liệu đi theo ba hướng:
+Các công nghệ ở mục 3.1 được ghép thành một vòng dữ liệu khép kín. Người dùng thao tác trên web app, thao tác được ghi vào database PostgreSQL; CDC đưa từng thay đổi vào lakehouse trên Databricks; lakehouse tính kết quả rồi chép ngược về PostgreSQL cho web app đọc, và đưa lên dashboard cho các các bộ phận nội bộ. Dữ liệu đi theo ba hướng:
 
 \begin{itemize}
   \item \textbf{Kéo (pull):} Databricks tải MovieLens, IMDb và gọi API TMDB theo đợt.
@@ -963,12 +963,11 @@ Một DQ check mức error không đạt & Job dừng trước bước serving; 
 \endgroup
 
 \textbf{Bảo mật.} Database phân quyền theo vai trò: app chỉ ghi qua các hàm được cấp, Debezium dùng một tài khoản chỉ đọc các bảng được theo dõi, bước serving dùng một tài khoản riêng. Token và mật khẩu nằm trong secret của Databricks hoặc file cấu hình có quyền hạn chế trên server, không nằm trong code hay trong báo cáo này. Kafka chỉ mở cổng trong mạng riêng (Tailscale); web app ra Internet qua Cloudflare Tunnel.
-
 \section{Ứng dụng}\label{sec:4}
 
 \subsection{Thiết kế giao diện theo nhóm người dùng}\label{sec:4.1}
 
-Người xem và các đội nội bộ có nhu cầu khác hẳn nhau, nên ứng dụng tách thành hai nơi: web app cho người xem và dashboard Databricks cho các đội nội bộ. Web app chỉ làm việc với PostgreSQL nên không phụ thuộc lakehouse; dashboard đọc thẳng tầng gold nên không cần chép số liệu phân tích về app. Phía dữ liệu cung cấp cho web app các bảng kết quả trong schema serving và hàm gợi ý online (mục 3.6).
+Do nhu cầu khác biệt giữa người xem và các các bộ phận nội bộ, ứng dụng được phân thành web app dành cho người xem và dashboard Databricks dành cho các các bộ phận nội bộ. Web app chỉ tương tác với PostgreSQL nên hoạt động độc lập với lakehouse; dashboard truy vấn trực tiếp tầng gold, không cần sao chép số liệu phân tích về ứng dụng. Tầng dữ liệu cung cấp cho web app các bảng kết quả trong schema serving và hàm gợi ý online (mục 3.6).
 
 \begingroup
 \small
@@ -979,37 +978,37 @@ Người xem và các đội nội bộ có nhu cầu khác hẳn nhau, nên ứ
 \begin{longtable}{@{}L{0.22\reporttablewidth} L{0.38\reporttablewidth} L{0.40\reporttablewidth}@{}}
 \caption[Thiết kế giao diện theo nhóm người dùng (mục 4.1)]{Thiết kế giao diện theo nhóm người dùng}\label{tab:15} \\
 \toprule
- & \textbf{Web app (người xem)} & \textbf{Dashboard (đội nội bộ)} \\
+ & \textbf{Web app (người xem)} & \textbf{Dashboard (các bộ phận nội bộ)} \\
 \midrule
 \endfirsthead
 \toprule
- & \textbf{Web app (người xem)} & \textbf{Dashboard (đội nội bộ)} \\
+ & \textbf{Web app (người xem)} & \textbf{Dashboard (các bộ phận nội bộ)} \\
 \midrule
 \endhead
 \midrule
 \endfoot
 \bottomrule
 \endlastfoot
-Đặc điểm người dùng & Không rành dữ liệu, muốn tìm phim nhanh, dùng cả trên điện thoại & Ra quyết định từ số liệu, cần biết số được tính thế nào \\
-Nguyên tắc giao diện & Áp phích phim là chính; một cú bấm để chấm điểm hay lưu phim; mỗi gợi ý kèm lý do (\textquotedbl{}Because you liked X\textquotedbl{}) & Mỗi trang mở đầu bằng tên BR và định nghĩa chỉ số, nói rõ phần nào là mô phỏng; KPI ở trên, biểu đồ ở giữa, bảng chi tiết ở dưới; bộ lọc và tải danh sách \\
+Đặc điểm người dùng & không cần thông tin chuyên môn về dữ liệu, cần tìm phim nhanh và truy cập trên cả điện thoại & Ra quyết định dựa trên số liệu và cần nắm rõ phương pháp tính toán chỉ số \\
+Nguyên tắc giao diện & Ưu tiên áp phích phim; cung cấp thao tác chấm điểm hoặc lưu phim trong một lần nhấn; mỗi gợi ý đi kèm lý do (\textquotedbl{}Because you liked X\textquotedbl{}) & Mỗi trang mở đầu bằng tên BR và định nghĩa chỉ số, đồng thời phân biệt rõ dữ liệu mô phỏng; KPI đặt ở đầu trang, biểu đồ ở giữa và bảng chi tiết ở cuối; hỗ trợ bộ lọc và tải danh sách \\
 Trang & Home, Advanced Search, trang phim, My list (trang Bookmarks), Profile & Phân tích: Overview, Product, Marketing, Content, Playback. Vận hành: Live CDC, Pipeline, Data quality, End-to-end trace \\
 Đọc và ghi & Ghi qua các hàm của app, đọc bảng kết quả do lakehouse trả về & Chỉ đọc tầng gold và các bảng vận hành, chất lượng \\
 \end{longtable}
 \endgroup
 
-\textbf{Web app.} Home có ô tìm kiếm, hàng \textquotedbl{}Top 10 this week\textquotedbl{} (BR2), \textquotedbl{}Picked for you\textquotedbl{} (BR1) và các hàng theo thể loại. Trang phim hiện thông tin TMDB, điểm IMDb, đạo diễn và diễn viên từ IMDb, nút chấm điểm, nút lưu phim, player và hàng \textquotedbl{}More like X\textquotedbl{} (BR3). Mọi thao tác được ghi thành sự kiện kèm nơi bấm và vị trí trong hàng, để BR4 đo được discovery channel.
+\textbf{Web app.} Trang Home gồm ô tìm kiếm, hàng \textquotedbl{}Top 10 this week\textquotedbl{} (BR2), hàng \textquotedbl{}Picked for you\textquotedbl{} (BR1) và các hàng phim theo thể loại. Trang phim hiển thị thông tin TMDB, điểm IMDb, đạo diễn và diễn viên từ IMDb, các nút chấm điểm và lưu phim, player, cùng hàng \textquotedbl{}More like X\textquotedbl{} (BR3). Mỗi thao tác được ghi nhận thành sự kiện kèm vị trí tương tác và thứ tự trong hàng, phục vụ đo lường discovery channel cho BR4.
 
-\textbf{Dashboard phân tích} có trang Overview với bảng 8 BR (Hình 7) và bốn trang cho bốn đội; cả hai dashboard được viết bằng code và triển khai cùng job, nên dựng lại được trên workspace mới. Các trang và bộ lọc:
+\textbf{Dashboard phân tích} gồm trang Overview với bảng 8 BR (Hình 7) và bốn trang tương ứng với bốn đội. Cả hai dashboard được định nghĩa bằng code và triển khai cùng job, cho phép tái tạo trên workspace mới. Các trang và bộ lọc gồm:
 
 \begin{itemize}
-  \item \textbf{Overview:} chỉ số 30 ngày gần nhất (user hoạt động, lượt xem, giờ xem, rating, tìm kiếm, phản hồi) kèm thời điểm của dữ liệu; tổng catalog và tổng tài khoản ghi riêng để không lẫn với số 30 ngày.
+  \item \textbf{Overview:} các chỉ số trong 30 ngày gần nhất (user hoạt động, lượt xem, giờ xem, rating, tìm kiếm và phản hồi), kèm thời điểm cập nhật dữ liệu; tổng catalog và tổng tài khoản được trình bày riêng để phân biệt với số liệu trong 30 ngày.
   \item \textbf{Product (BR4):} lọc theo ngày và discovery channel.
-  \item \textbf{Marketing (BR5, BR8):} lọc phân khúc và thể loại yêu thích, tải danh sách user; tháng chưa chốt được đánh dấu và không hiện tỉ lệ.
-  \item \textbf{Content (BR7):} chuỗi tìm không ra phim, xếp theo số lượt tìm.
+  \item \textbf{Marketing (BR5, BR8):} lọc theo phân khúc và thể loại yêu thích, tải danh sách user; tháng chưa chốt được đánh dấu và không hiển thị tỉ lệ.
+  \item \textbf{Content (BR7):} các chuỗi tìm kiếm không có kết quả, được xếp theo số lượt tìm.
   \item \textbf{Playback (BR6):} lọc theo ngày, thiết bị và phiên bản player.
 \end{itemize}
 
-Tỉ lệ không xác định (mẫu số bằng 0) để trống thay vì hiện 0\%.
+Các tỉ lệ không xác định do mẫu số bằng 0 được để trống, không hiển thị thành 0\%.
 
 \begin{figure}[H]
 \centering
@@ -1020,11 +1019,11 @@ Tỉ lệ không xác định (mẫu số bằng 0) để trống thay vì hiệ
 
 \subsection{Demo từng BR}\label{sec:4.2}
 
-Phần này đi qua từng BR: nhu cầu dữ liệu, kết quả khai thác trên ứng dụng, và việc đội liên quan làm với kết quả đó. Mọi số liệu và ảnh lấy ngày 08/11/2026: phần web chạy bằng một tài khoản mới, phần dashboard lấy sau vòng daily kết thúc lúc 03:32.
+Phần này trình bày nhu cầu dữ liệu của từng BR, kết quả khai thác trên ứng dụng và cách đội liên quan sử dụng kết quả. Số liệu và hình ảnh được ghi nhận ngày 08/11/2026; web app được kiểm thử bằng tài khoản mới, còn dashboard được ghi nhận sau khi vòng daily kết thúc lúc 03:32.
 
 \subsubsection*{BR1 \textperiodcentered{} Gợi ý cá nhân (Viewers, web app)}
 
-Nhu cầu quen thuộc nhất của người xem là biết nên xem gì tiếp. Để kiểm tra, nhóm dùng một tài khoản mới, lọc thể loại Horror (Hình 8) rồi chấm 5 sao \textit{Hereditary}. Hàng \textquotedbl{}Picked for you\textquotedbl{} đổi ngay từ Top 10 phổ biến sang 10 phim kinh dị, giật gân như \textit{Midsommar}, \textit{The Witch}, \textit{Get Out}, \textit{Us}, \textit{It Follows}, và 5 phim đầu ghi rõ lý do \textquotedbl{}Because you liked Hereditary\textquotedbl{} (Hình 9). Người xem có gợi ý hợp gu ngay sau hành động đầu tiên, không phải chờ vòng cập nhật của lakehouse.
+BR1 đáp ứng nhu cầu xác định nội dung phù hợp để xem tiếp. Trong kịch bản kiểm thử, một tài khoản mới lọc thể loại Horror (Hình 8) và chấm 5 sao cho \textit{Hereditary}. Sau thao tác này, hàng \textquotedbl{}Picked for you\textquotedbl{} chuyển từ danh sách Top 10 phổ biến sang 10 phim kinh dị, giật gân, gồm \textit{Midsommar}, \textit{The Witch}, \textit{Get Out}, \textit{Us} và \textit{It Follows}. Năm phim đầu tiên hiển thị lý do \textquotedbl{}Because you liked Hereditary\textquotedbl{} (Hình 9). Gợi ý cá nhân được cập nhật ngay sau hành động đầu tiên, không phụ thuộc vào vòng cập nhật của lakehouse.
 
 \begin{figure}[H]
 \centering
@@ -1042,7 +1041,7 @@ Nhu cầu quen thuộc nhất của người xem là biết nên xem gì tiếp.
 
 \subsubsection*{BR2 \textperiodcentered{} Xu hướng trong tuần (Viewers, web app)}
 
-Với một tài khoản chưa có lịch sử, hàng \textquotedbl{}Top 10 this week\textquotedbl{} là điểm bắt đầu. Ngày 08/11, hạng 1 là \textit{Cast Away} với 60 người đã chấm hoặc xem trong 7 ngày, tiếp theo là \textit{Spider-Man:} \textit{Across the Spider-Verse} (58) và \textit{Bullet Train} (57) (Hình 10). Bảng xếp theo số người chứ không theo số rating, nên người xem mà không chấm vẫn được tính. Ngay khi người dùng có hành động đầu tiên, gợi ý riêng của BR1 thay cho danh sách chung này.
+Đối với tài khoản chưa có lịch sử hoạt động, hàng \textquotedbl{}Top 10 this week\textquotedbl{} cung cấp danh sách khởi đầu. Tại thời điểm ghi nhận ngày 08/11, \textit{Cast Away} đứng hạng 1 với 60 người đã chấm điểm hoặc xem phim trong 7 ngày; tiếp theo là \textit{Spider-Man:} \textit{Across the Spider-Verse} (58) và \textit{Bullet Train} (57) (Hình 10). Bảng xếp hạng dựa trên số người dùng, không dựa trên số lượt rating, nên bao gồm cả người xem không chấm điểm. Sau hành động đầu tiên của người dùng, danh sách này được thay bằng gợi ý cá nhân của BR1.
 
 \begin{figure}[H]
 \centering
@@ -1053,7 +1052,7 @@ Với một tài khoản chưa có lịch sử, hàng \textquotedbl{}Top 10 this
 
 \subsubsection*{BR3 \textperiodcentered{} Phim tương tự (Viewers, web app)}
 
-Người xem cần biết còn phim nào giống phim mình thích. Trên trang \textit{Hereditary}, 5 phim đầu của hàng \textquotedbl{}More like Hereditary\textquotedbl{} đều chung ít nhất một thể loại, 4 trong 5 là phim kinh dị, và \textit{Midsommar} có cùng đạo diễn Ari Aster (Hình 11). Vì phim ít người chấm được so theo nội dung, 99,3\% catalog có phim tương tự, nên trang phim nào cũng có gợi ý để xem tiếp (mục 3.6).
+BR3 giúp người xem tìm các phim có nội dung tương đồng với phim đang quan tâm. Trên trang \textit{Hereditary}, năm phim đầu tiên trong hàng \textquotedbl{}More like Hereditary\textquotedbl{} đều có ít nhất một thể loại chung; bốn phim thuộc thể loại kinh dị và \textit{Midsommar} có cùng đạo diễn Ari Aster (Hình 11). Đối với phim có ít lượt chấm điểm, hệ thống sử dụng độ tương đồng nội dung. Phương pháp này tạo được gợi ý cho 99,3\% catalog (mục 3.6).
 
 \begin{figure}[H]
 \centering
@@ -1069,10 +1068,10 @@ Người xem cần biết còn phim nào giống phim mình thích. Trên trang 
 
 \subsubsection*{BR4 \textperiodcentered{} Discovery channel dẫn tới xem phim (Product, dashboard)}
 
-Đội Product muốn biết discovery channel nào đưa người khám phá phim tới xem nhiều nhất. Tính trên các lượt mở trang để khám phá, tìm kiếm dẫn tới xem 74,8\%, My list 57,0\%, phim tương tự 14,6\%, gợi ý 12,5\% và trending 7,1\% (Hình 12). Một khi đã bắt đầu xem thì tỉ lệ xem hết gần như như nhau ở mọi discovery channel (58--66\%), tức các channel chỉ khác nhau ở chỗ có kéo được người xem bắt đầu hay không. Đội Product dùng bảng này để sắp thứ tự các hàng trên Home.
+BR4 hỗ trợ đội Product xác định discovery channel nào chuyển đổi lượt khám phá phim thành lượt xem. Trong các lượt mở trang có mục đích khám phá, tìm kiếm dẫn tới xem với tỉ lệ 74,8\%, My list đạt 57,0\%, phim tương tự đạt 14,6\%, gợi ý đạt 12,5\% và trending đạt 7,1\% (Hình 12). Sau khi lượt xem bắt đầu, tỉ lệ xem hết giữa các discovery channel tương đương nhau, dao động từ 58\% đến 66\%. Kết quả cho thấy khác biệt chủ yếu nằm ở khả năng thúc đẩy người xem bắt đầu xem phim. Đội Product có thể sử dụng số liệu này để điều chỉnh thứ tự các hàng trên Home.
 
 \begin{quote}
-\textbf{Hiểu sai số liệu nếu không biết dữ liệu sinh ra thế nào.} 75,3\% lượt mở từ gợi ý, phim tương tự và trending (839.967 lượt) là để chấm phim đã xem ở nơi khác, không phải để khám phá. Nếu không tách chúng ra, các channel đó trông kém hơn thực tế. Pipeline gắn view intent cho từng lượt mở và chỉ tính lượt khám phá.
+\textbf{Cần xét nguồn gốc dữ liệu khi diễn giải chỉ số.} Trong 75,3\% lượt mở từ gợi ý, phim tương tự và trending (839.967 lượt), mục đích là chấm điểm phim đã xem ở nơi khác, không phải khám phá nội dung. Nếu không phân loại các lượt này, hiệu quả của những channel đó sẽ bị đánh giá thấp. Pipeline gắn view intent cho từng lượt mở và chỉ đưa các lượt khám phá vào phép tính.
 \end{quote}
 
 \begin{figure}[H]
@@ -1084,7 +1083,7 @@ Người xem cần biết còn phim nào giống phim mình thích. Trên trang 
 
 \subsubsection*{BR5 \textperiodcentered{} Giữ chân và kéo lại user (Marketing, dashboard)}
 
-Đội Marketing cần theo dõi mức độ giữ chân theo tháng để chủ động kéo lại user: mỗi tháng giữ lại được bao nhiêu user, và chiến dịch nên kéo lại ai. Tháng 09/2026, tháng đã chốt gần nhất, nền tảng giữ được 64,4\% (2.048 trên 3.180 user hoạt động); 8 tháng trước đó dao động từ 54,0\% đến 62,4\%. Hiện có 3.892 user đang nguội dần (Cooling: không hoạt động 30 ngày nhưng chưa quá 180 ngày), trong đó 1.945 người thích Drama (Hình 13). Danh sách này kèm thể loại yêu thích được tải thẳng từ dashboard cho chiến dịch kéo lại; trên nền tảng thật chỉ cần nối thêm email.
+BR5 cung cấp cho đội Marketing chỉ số giữ chân theo tháng và danh sách user cần được tiếp cận lại. Tháng 09/2026, tháng gần nhất đã chốt dữ liệu, có tỉ lệ giữ chân 64,4\% (2.048 trên 3.180 user hoạt động); tám tháng trước đó có tỉ lệ dao động từ 54,0\% đến 62,4\%. Có 3.892 user thuộc phân khúc Cooling, tức không hoạt động trong 30 ngày nhưng chưa quá 180 ngày; trong số này, 1.945 người có thể loại yêu thích là Drama (Hình 13). Danh sách kèm thể loại yêu thích có thể được tải trực tiếp từ dashboard để phục vụ chiến dịch tiếp cận lại. Khi triển khai trên nền tảng thực tế, quy trình có thể được tích hợp thêm với hệ thống email.
 
 \begin{figure}[H]
 \centering
@@ -1095,9 +1094,9 @@ Người xem cần biết còn phim nào giống phim mình thích. Trên trang 
 
 \subsubsection*{BR6 \textperiodcentered{} Chất lượng phát (Platform, dashboard)}
 
-Đội Platform cần giám sát chất lượng phát để ưu tiên sửa: thiết bị và phiên bản player nào phát kém, và người dùng có phàn nàn đúng chỗ đó không. Kết quả trỏ rõ về một phiên bản: trên mobile, bản 4.0.7 lỗi 2,8\%, thời gian khởi động p95 ngày tệ nhất 8.933 ms và 72,7 phàn nàn trên 1.000 lượt xem, trong khi bản 4.1.2 trên cùng thiết bị chỉ lỗi 1,1\%, 4.227 ms và 26,9 phàn nàn (Hình 14).
+BR6 hỗ trợ đội Platform theo dõi chất lượng phát theo thiết bị và phiên bản player, đồng thời đối chiếu với phản hồi của người dùng. Trên mobile, phiên bản 4.0.7 có tỉ lệ lỗi 2,8\%, thời gian khởi động p95 cao nhất theo ngày là 8.933 ms và 72,7 phản hồi trên 1.000 lượt xem. Trong khi đó, phiên bản 4.1.2 trên cùng thiết bị có tỉ lệ lỗi 1,1\%, thời gian khởi động 4.227 ms và 26,9 phản hồi trên 1.000 lượt xem (Hình 14).
 
-Nội dung phản hồi cũng khớp: 81\% phản hồi gắn với bản 4.0.7 là về lỗi phát (322/398), so với 59\% ở bản 4.1.2 (461/782). Hành động rút ra khá rõ: buộc cập nhật bản 4.0.7 lên 4.1.2.
+Nội dung phản hồi cũng cho thấy khác biệt giữa hai phiên bản: 81\% phản hồi gắn với phiên bản 4.0.7 liên quan đến lỗi phát (322/398), so với 59\% ở phiên bản 4.1.2 (461/782). Kết quả gợi ý ưu tiên yêu cầu cập nhật từ phiên bản 4.0.7 lên 4.1.2.
 
 \begin{figure}[H]
 \centering
@@ -1108,11 +1107,11 @@ Nội dung phản hồi cũng khớp: 81\% phản hồi gắn với bản 4.0.7 
 
 \subsubsection*{BR7 \textperiodcentered{} Phim người dùng tìm mà catalog chưa có (Content, web app và dashboard)}
 
-Đội Content muốn biết người dùng tìm phim gì mà catalog không có. Trong 50.233 lượt tìm bằng chữ, 40,0\% không ra kết quả (Hình 15).
+BR7 cung cấp cho đội Content thông tin về nhu cầu tìm kiếm đối với các phim chưa có trong catalog. Trong 50.233 lượt tìm kiếm bằng văn bản, 40,0\% không trả về kết quả (Hình 15).
 
-57,8\% số lượt đó dồn vào 125 chuỗi tìm lặp lại từ 5 người trở lên, đứng đầu là phim ra sau 2023 (\textquotedbl{}wicked for good\textquotedbl{} 1.252 lượt, \textquotedbl{}zootopia 2\textquotedbl{} 730, \textquotedbl{}avatar fire and ash\textquotedbl{} 630) và phim Việt (\textquotedbl{}mai tran thanh\textquotedbl{} 442, \textquotedbl{}lat mat 7\textquotedbl{} 430) (Hình 16). Đây chính là danh sách phim cần mua theo thứ tự nhu cầu. Phần còn lại là chuỗi lẻ tẻ, phần lớn gõ sai tên phim có sẵn, cho thấy cần thêm tìm kiếm chịu lỗi chính tả.
+Trong số lượt tìm kiếm không có kết quả, 57,8\% tập trung ở 125 chuỗi được lặp lại từ 5 người trở lên. Các chuỗi có tần suất cao nhất gồm tên phim phát hành sau năm 2023 (\textquotedbl{}wicked for good\textquotedbl{}: 1.252 lượt, \textquotedbl{}zootopia 2\textquotedbl{}: 730 lượt, \textquotedbl{}avatar fire and ash\textquotedbl{}: 630 lượt) và phim Việt (\textquotedbl{}mai tran thanh\textquotedbl{}: 442 lượt, \textquotedbl{}lat mat 7\textquotedbl{}: 430 lượt) (Hình 16). Danh sách này có thể được sử dụng để ưu tiên bổ sung phim vào catalog theo nhu cầu. Các chuỗi còn lại phần lớn là tên phim có sẵn nhưng bị nhập sai chính tả, cho thấy nhu cầu cải thiện khả năng xử lý lỗi chính tả của chức năng tìm kiếm.
 
-Một góc nhìn khác là tìm ra kết quả nhưng không ai bấm: sau 09/10/2026 có 24,5\% lượt như vậy (1.060/4.324). Tuy nhiên các chuỗi đứng đầu lại là tên phim chính xác chỉ có 1--2 kết quả (\textquotedbl{}sleepless in seattle\textquotedbl{}, \textquotedbl{}the lion king\textquotedbl{}, \textquotedbl{}cast away\textquotedbl{}), nên đây là hành vi tìm rồi bỏ đi mà simulator cố ý mô phỏng, chứ không phải kết quả tìm kiếm kém. Với dữ liệu thật, đội Product dùng đúng chỉ số này để phát hiện tìm kiếm xếp hạng chưa tốt.
+Một chỉ số khác là tỉ lệ tìm kiếm có kết quả nhưng không có lượt nhấn. Sau ngày 09/10/2026, tỉ lệ này là 24,5\% (1.060/4.324). Tuy nhiên, các chuỗi có tần suất cao nhất là tên phim chính xác với chỉ 1--2 kết quả (\textquotedbl{}sleepless in seattle\textquotedbl{}, \textquotedbl{}the lion king\textquotedbl{}, \textquotedbl{}cast away\textquotedbl{}). Đây là hành vi tìm kiếm rồi không chọn kết quả được chủ đích mô phỏng, không phản ánh chất lượng xếp hạng tìm kiếm. Với dữ liệu thực tế, đội Product có thể sử dụng chỉ số này để phát hiện các vấn đề về thứ hạng kết quả.
 
 \begin{figure}[H]
 \centering
@@ -1130,7 +1129,7 @@ Một góc nhìn khác là tìm ra kết quả nhưng không ai bấm: sau 09/10
 
 \subsubsection*{BR8 \textperiodcentered{} Phim đã lưu có được xem không (Marketing, dashboard)}
 
-Nhu cầu cuối cùng của đội Marketing là theo dõi hiệu quả của My list: phim đã lưu có được xem không? Trong 26.114 lần lưu, 28,4\% đã được xem hoặc chấm khi phim còn trong danh sách, trung bình sau 30,1 ngày (trung vị 16 ngày); 18.704 lần lưu vẫn đang chờ (Hình 13). Danh sách phim đang chờ là đầu vào cho email hoặc thông báo nhắc xem. Trên web, trang Bookmarks của tài khoản kiểm thử cho thấy đúng hai trạng thái mà pipeline phân biệt: \textit{The} \textit{Dark Knight} chỉ lưu, còn \textit{Pulp Fiction} lưu rồi chấm 4 sao (Hình 17).
+BR8 hỗ trợ đội Marketing theo dõi tỉ lệ chuyển đổi từ My list sang lượt xem. Trong 26.114 lần lưu, 28,4\% phim được xem hoặc chấm điểm khi vẫn còn trong danh sách; thời gian trung bình đến hành động là 30,1 ngày và trung vị là 16 ngày. Có 18.704 lần lưu vẫn đang chờ chuyển đổi (Hình 13). Danh sách phim này có thể được sử dụng làm đầu vào cho email hoặc thông báo nhắc xem. Trên web app, trang Bookmarks của tài khoản kiểm thử thể hiện hai trạng thái được Pipeline phân biệt: \textit{The} \textit{Dark Knight} chỉ được lưu, còn \textit{Pulp Fiction} được lưu rồi chấm 4 sao (Hình 17).
 
 \begin{figure}[H]
 \centering
@@ -1332,7 +1331,7 @@ BR8 & Lưu \textit{Pulp Fiction} rồi chấm 4 sao; lưu \textit{The Dark Knigh
 \endgroup
 
 \begin{quote}
-\textbf{Dữ liệu đi trọn một vòng.} BR7 và BR8 cho thấy một thao tác của người dùng trên web đi hết đường PostgreSQL \ensuremath{\rightarrow} Debezium \ensuremath{\rightarrow} Kafka \ensuremath{\rightarrow} Volume \ensuremath{\rightarrow} bronze \ensuremath{\rightarrow} silver \ensuremath{\rightarrow} gold rồi hiện trên dashboard của đội nội bộ. BR1 cho thấy gợi ý đổi ngay nhờ lớp online, không phải chờ vòng đó.
+\textbf{Dữ liệu đi trọn một vòng.} BR7 và BR8 cho thấy một thao tác của người dùng trên web đi hết đường PostgreSQL \ensuremath{\rightarrow} Debezium \ensuremath{\rightarrow} Kafka \ensuremath{\rightarrow} Volume \ensuremath{\rightarrow} bronze \ensuremath{\rightarrow} silver \ensuremath{\rightarrow} gold rồi hiện trên dashboard của các bộ phận nội bộ. BR1 cho thấy gợi ý đổi ngay nhờ lớp online, không phải chờ vòng đó.
 \end{quote}
 
 \textbf{So với khi không có ứng dụng.} Không có dashboard, đội Marketing muốn có danh sách user Cooling thích Drama phải tự viết SQL nối rating, lượt xem, user và thể loại phim, rồi tự định nghĩa thế nào là \textquotedbl{}Cooling\textquotedbl{}. Với ứng dụng, phép tính đó đã nằm sẵn trong mart của BR5, người dùng chỉ lọc và tải về.
@@ -1516,7 +1515,7 @@ O4 Trải nghiệm xem & BR6 & Mobile 4.0.7 lỗi 2,8\% và 72,7 phàn nàn trê
 Nguyễn Đình Tuấn (2670389) & Bronze, silver, kiểm soát chất lượng dữ liệu; đo và tổng hợp số liệu đánh giá; tìm hiểu giải pháp thay thế & Mục 3.4, 3.5 và mục 5 & 100\% \\
 Lê Tuấn Hưng (2670289) & Thu thập dữ liệu: MovieLens, TMDB, IMDb; Debezium, Kafka, sink, simulator; vận hành server & Mục 3.3; BR6, BR7 & 100\% \\
 Trần Anh Khoa (2670309) & Tầng gold, hệ gợi ý, serving, dashboard & BR4, BR5, BR8 & 100\% \\
-Nguyễn Tấn Dũng (2670272) & Web app & BR1, BR2, BR3 & 100\% \\
+Nguyễn Tấn Dũng (2670272) & Xây dựng Web app;  thiết kế và deploy app database & BR1, BR2, BR3 & 100\% \\
 \end{longtable}
 \endgroup
 
