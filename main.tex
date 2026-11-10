@@ -652,17 +652,17 @@ Hai đường vào cùng kết thúc ở một vùng landing trên Volume, nơi 
 \midrule
 \endfirsthead
 \toprule
-\textbf{Schema} & \textbf{Chứa gì} & \textbf{Ai ghi} & \textbf{Ai đọc} & \textbf{CDC theo dõi} & \textbf{Số bảng (08/11)} \\
+\textbf{Schema} & \textbf{Nội dung} & \textbf{Thac tác ghi} & \textbf{Thac tác} & \textbf{CDC theo dõi}  \\
 \midrule
 \endhead
 \midrule
 \endfoot
 \bottomrule
 \endlastfoot
-\texttt{app} & Hành vi người dùng & Web app, simulator & Web app, Debezium & Có & 6 \\
-\texttt{serving} & Kết quả lakehouse tính sẵn & Job \texttt{cinelake\dbsep{}serving} & Web app & Không & 5 (Bảng 29) \\
-\texttt{app\dbsep{}private} & Tài khoản, mật khẩu đã biến đổi, phiên đăng nhập; thêm ba bảng riêng của web app (ảnh phim, nguồn và biên nhận sự kiện) & Web app & Web app & Không & 7 (10 tài khoản) \\
-\texttt{cdc\dbsep{}meta} & Bảng heartbeat & Debezium & Debezium & Có, chỉ để giữ kết nối & 1 \\
+\texttt{app} & Hành vi người dùng & Web app & Web app, Debezium & Có \\
+\texttt{serving} & Kết quả lakehouse tính sẵn & Job \texttt{cinelake\dbsep{}serving} & Web app & Không \\
+\texttt{app\dbsep{}private} & Tài khoản, mật khẩu đã biến đổi, phiên đăng nhập; thêm ba bảng riêng của web app (ảnh phim, nguồn và biên nhận sự kiện) & Web app & Web app & Không  \\
+\texttt{cdc\dbsep{}meta} & Bảng heartbeat & Debezium & Debezium & Có \\
 \end{longtable}
 \endgroup
 
