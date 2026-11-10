@@ -210,7 +210,7 @@ Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check
 
 Một nền tảng phim sống nhờ người xem tìm được phim hợp gu, xem trọn vẹn và quay lại. Để làm được việc đó, cùng một nguồn dữ liệu phải phục vụ hai nơi: người xem cần gợi ý ngay trên app, còn các internal teams (các bộ phận nội bộ ) cần số liệu để quyết định. Nhóm lấy cảm hứng từ cách Netflix tách xử lý dữ liệu thành tầng offline (tính trước) và tầng online (tính ngay lúc người dùng hỏi), rồi xây một phiên bản thu nhỏ chạy được trên hạ tầng miễn phí.
 
-CineLake là nền tảng xem, chấm điểm và khám phá phim, ra mắt ngày 28/12/2025 với đủ tính năng: chấm điểm, xem phim, tìm kiếm, lưu phim vào My list và gửi phản hồi. Trọng tâm của đồ án là phần kỹ thuật dữ liệu: đưa dữ liệu từ nguồn bên ngoài và từ database của app vào lakehouse, làm sạch và mô hình hoá, kiểm soát chất lượng, rồi đưa kết quả ngược lại cho app và dashboard.
+Trong đồ án này, nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Trên dòng thời gian được dịch chuyển từ dữ liệu MovieLens, nhóm chọn ngày 28/12/2025 làm mốc giả định CineLake bắt đầu hoạt động trong kịch bản tái dựng. Mốc này phân chia dữ liệu lịch sử được nạp theo đợt và dữ liệu được phát lại qua ứng dụng (mục~\ref{sec:2.3}). Ứng dụng hỗ trợ xem phim, chấm điểm, tìm kiếm, lưu phim vào Danh sách ưa thích (\textit{Danh sách yêu thích}) và gửi phản hồi. Trọng tâm của đồ án là đưa dữ liệu từ các nguồn bên ngoài và cơ sở dữ liệu của ứng dụng vào lakehouse để làm sạch, mô hình hoá và kiểm soát chất lượng, rồi đưa kết quả trở lại ứng dụng và cung cấp số liệu cho dashboard.
 
 \subsection{Yêu cầu nghiệp vụ}\label{sec:1.2}
 
@@ -284,7 +284,7 @@ Dữ liệu của CineLake được dùng ở hai nơi: web app cho người xem
 \bottomrule
 \endlastfoot
 Viewers & Người xem & Web app & Biết nên xem gì tiếp, phim nào đang được chú ý, phim nào giống phim mình thích \\
-Product & Đội sản phẩm & Dashboard & Discovery channel nào (tìm kiếm, gợi ý, trending, phim tương tự, My list) đưa người xem tới xem phim \\
+Product & Đội sản phẩm & Dashboard & Discovery channel nào (tìm kiếm, gợi ý, trending, phim tương tự, Danh sách yêu thích) đưa người xem tới xem phim \\
 Marketing và CRM & Marketing, chăm sóc khách hàng & Dashboard & Tỉ lệ giữ chân theo tháng, danh sách user cần kéo lại, phim đã lưu mà chưa xem \\
 Content & Đội mua nội dung & Dashboard & Phim người dùng tìm mà catalog chưa có \\
 Platform & Đội kỹ thuật player và hạ tầng & Dashboard & Thiết bị, phiên bản player nào phát kém, người dùng phàn nàn gì \\
@@ -324,7 +324,7 @@ BR4 & Product & Đội sản phẩm cần biết discovery channel nào dẫn t�
 BR5 & Marketing & Marketing cần theo dõi mức độ giữ chân người dùng theo tháng, để chủ động giữ và kéo lại user & O2 & Dựng lịch sử hoạt động theo tháng của từng người dùng từ nhiều loại hành động & Thật tới 09/10/2026, sau đó mô phỏng \\
 BR6 & Platform & Platform cần giám sát chất lượng phát, để ưu tiên sửa đúng thiết bị và phiên bản player & O4 & Ghép sự kiện phát với phàn nàn của người dùng theo thiết bị và phiên bản & Mô phỏng \\
 BR7 & Content & Đội nội dung cần danh sách phim người dùng tìm mà catalog chưa có, xếp theo số người tìm, để quyết định mua nội dung & O3 & Đối chiếu nội dung người dùng tìm với danh mục phim hiện có & Mô phỏng \\
-BR8 & Marketing & Marketing cần theo dõi hiệu quả của My list, để nhắc đúng những phim người dùng đã lưu mà chưa xem & O1, O2 & Theo dõi vòng đời của từng lần lưu phim, kể cả lần bỏ khỏi My list, vốn không còn dấu vết trong dữ liệu hiện tại của app & Mô phỏng \\
+BR8 & Marketing & Marketing cần theo dõi hiệu quả của Danh sách yêu thích, để nhắc đúng những phim người dùng đã lưu mà chưa xem & O1, O2 & Theo dõi vòng đời của từng lần lưu phim, kể cả lần bỏ khỏi Danh sách yêu thích, vốn không còn dấu vết trong dữ liệu hiện tại của app & Mô phỏng \\
 \end{longtable}
 \endgroup
 
@@ -357,7 +357,7 @@ Bốn nguồn, và nguồn nào cũng được dùng cho ít nhất một BR:
 MovieLens 32M (GroupLens) & 32 triệu rating và 2 triệu tag thật của 200.948 người & Tải file, một lần & BR1, BR2, BR3, BR5 \\
 TMDB API & Thông tin phim: tên, năm, thể loại, từ khoá, poster & Gọi API, chỉ lấy phần thay đổi & Catalog cho mọi BR và web app; BR3 \\
 IMDb datasets & Điểm IMDb, đạo diễn, diễn viên, tên tiếng Việt & Tải file TSV & Trang phim; BR3 \\
-Database của web app (Neon PostgreSQL) & User, rating, tag, tìm kiếm, My list, sự kiện xem và phản hồi & CDC, liên tục & Cả 8 BR \\
+Database của web app (Neon PostgreSQL) & User, rating, tag, tìm kiếm, Danh sách yêu thích, sự kiện xem và phản hồi & CDC, liên tục & Cả 8 BR \\
 \end{longtable}
 \endgroup
 
@@ -496,7 +496,7 @@ Web app cần đúng loại database này, việc mà lakehouse không làm tố
 
 Change Data Capture (CDC) là kỹ thuật ghi lại từng thay đổi của database để hệ thống khác dùng. Có hai cách phổ biến: định kỳ hỏi các dòng có thời điểm cập nhật mới (query-based), hoặc đọc transaction log của chính database (log-based). Cách thứ hai không thêm tải truy vấn, thấy được cả lệnh xoá và giữ đúng thứ tự commit. Debezium là công cụ CDC log-based mã nguồn mở phổ biến nhất, chạy như một connector trên Kafka Connect. Với PostgreSQL, Debezium đọc Write-Ahead Log (WAL) qua một replication slot, và mỗi thay đổi mang một số thứ tự LSN chỉ tăng.
 
-Nhóm chọn cách log-based vì BR8 cần biết lúc người dùng bỏ phim khỏi My list, mà dòng đó bị xoá hẳn trong database của app; cách hỏi định kỳ sẽ không bao giờ thấy nó. Debezium theo dõi 6 bảng của app, mỗi bảng ra một topic Kafka, và số LSN đi kèm được lakehouse dùng để biết thay đổi nào mới hơn.
+Nhóm chọn cách log-based vì BR8 cần biết lúc người dùng bỏ phim khỏi Danh sách yêu thích, mà dòng đó bị xoá hẳn trong database của app; cách hỏi định kỳ sẽ không bao giờ thấy nó. Debezium theo dõi 6 bảng của app, mỗi bảng ra một topic Kafka, và số LSN đi kèm được lakehouse dùng để biết thay đổi nào mới hơn.
 
 \Needspace{9\baselineskip}
 \subsubsection*{Apache Kafka}
@@ -722,7 +722,7 @@ Tầng này có 14 bảng, thuộc hai nhóm xử lý khác nhau:
 
 \begin{itemize}
   \item \textbf{Danh mục phim (5 bảng, 83.082 phim):} ghép từ MovieLens, TMDB và IMDb, gồm bảng phim, bảng nối mã, người tham gia, thông tin người và tên phim (có tên tiếng Việt). Nhóm này chỉ dựng lại khi có dữ liệu batch mới.
-  \item \textbf{Dữ liệu từ app (9 bảng, 202.425 user, 32.002.850 rating):} gồm trạng thái hiện tại (user, rating, tag, My list, tìm kiếm, sự kiện), lịch sử từng lần đổi rating và My list (phục vụ kiểm tra và BR8) và một bảng quarantine chứa thay đổi lỗi. Nhóm này cập nhật mỗi vòng bằng MERGE.
+  \item \textbf{Dữ liệu từ app (9 bảng, 202.425 user, 32.002.850 rating):} gồm trạng thái hiện tại (user, rating, tag, Danh sách yêu thích, tìm kiếm, sự kiện), lịch sử từng lần đổi rating và Danh sách yêu thích (phục vụ kiểm tra và BR8) và một bảng quarantine chứa thay đổi lỗi. Nhóm này cập nhật mỗi vòng bằng MERGE.
 \end{itemize}
 
 Hình 3 cho thấy hai cụm thực thể của silver: danh mục phim nối nhau qua \texttt{movie\dbsep{}id} (mã TMDB), còn các bảng dữ liệu từ app nối với nhau qua \texttt{user\dbsep{}id} và \texttt{movie\dbsep{}id} . Danh sách bảng kèm số dòng ở Phụ lục E (Bảng 27).
@@ -907,7 +907,7 @@ BR4 & Lượt mở trang phim, lượt xem từ app (CDC) & Mở trang phim, Xem
 BR5 & Hoạt động của user từ MovieLens và app (CDC) & Các fact hành động, dimension user; mart\dbsep{}user\dbsep{}engagement, mart\dbsep{}user\dbsep{}retention & Dashboard, trang Marketing \\
 BR6 & Sự kiện player và phản hồi từ app (CDC) & Xem phim, Phản hồi; mart\dbsep{}playback\dbsep{}quality & Dashboard, trang Playback \\
 BR7 & Lượt tìm kiếm từ app (CDC), catalog từ TMDB & Tìm kiếm; mart\dbsep{}search\dbsep{}gaps & Dashboard, trang Content; web trả 0 kết quả \\
-BR8 & Lần lưu, xem và bỏ khỏi My list từ app (CDC) & Lưu phim; mart\dbsep{}watchlist\dbsep{}conversion & Dashboard, trang Marketing; web: My list \\
+BR8 & Lần lưu, xem và bỏ khỏi Danh sách yêu thích từ app (CDC) & Lưu phim; mart\dbsep{}watchlist\dbsep{}conversion & Dashboard, trang Marketing; web: Danh sách yêu thích \\
 \end{longtable}
 \endgroup
 
@@ -991,7 +991,7 @@ Do nhu cầu khác biệt giữa người xem và các các bộ phận nội b�
 \endlastfoot
 Đặc điểm người dùng & không cần thông tin chuyên môn về dữ liệu, cần tìm phim nhanh và truy cập trên cả điện thoại & Ra quyết định dựa trên số liệu và cần nắm rõ phương pháp tính toán chỉ số \\
 Nguyên tắc giao diện & Ưu tiên áp phích phim; cung cấp thao tác chấm điểm hoặc lưu phim trong một lần nhấn; mỗi gợi ý đi kèm lý do (\textquotedbl{}Because you liked X\textquotedbl{}) & Mỗi trang mở đầu bằng tên BR và định nghĩa chỉ số, đồng thời phân biệt rõ dữ liệu mô phỏng; KPI đặt ở đầu trang, biểu đồ ở giữa và bảng chi tiết ở cuối; hỗ trợ bộ lọc và tải danh sách \\
-Trang & Home, Advanced Search, trang phim, My list (trang Bookmarks), Profile & Phân tích: Overview, Product, Marketing, Content, Playback. Vận hành: Live CDC, Pipeline, Data quality, End-to-end trace \\
+Trang & Home, Advanced Search, trang phim, Danh sách yêu thích (trang Bookmarks), Profile & Phân tích: Overview, Product, Marketing, Content, Playback. Vận hành: Live CDC, Pipeline, Data quality, End-to-end trace \\
 Đọc và ghi & Ghi qua các hàm của app, đọc bảng kết quả do lakehouse trả về & Chỉ đọc tầng gold và các bảng vận hành, chất lượng \\
 \end{longtable}
 \endgroup
@@ -1068,7 +1068,7 @@ BR3 giúp người xem tìm các phim có nội dung tương đồng với phim 
 
 \subsubsection*{BR4 \textperiodcentered{} Discovery channel dẫn tới xem phim (Product, dashboard)}
 
-BR4 hỗ trợ đội Product xác định discovery channel nào chuyển đổi lượt khám phá phim thành lượt xem. Trong các lượt mở trang có mục đích khám phá, tìm kiếm dẫn tới xem với tỉ lệ 74,8\%, My list đạt 57,0\%, phim tương tự đạt 14,6\%, gợi ý đạt 12,5\% và trending đạt 7,1\% (Hình 12). Sau khi lượt xem bắt đầu, tỉ lệ xem hết giữa các discovery channel tương đương nhau, dao động từ 58\% đến 66\%. Kết quả cho thấy khác biệt chủ yếu nằm ở khả năng thúc đẩy người xem bắt đầu xem phim. Đội Product có thể sử dụng số liệu này để điều chỉnh thứ tự các hàng trên Home.
+BR4 hỗ trợ đội Product xác định discovery channel nào chuyển đổi lượt khám phá phim thành lượt xem. Trong các lượt mở trang có mục đích khám phá, tìm kiếm dẫn tới xem với tỉ lệ 74,8\%, Danh sách yêu thích đạt 57,0\%, phim tương tự đạt 14,6\%, gợi ý đạt 12,5\% và trending đạt 7,1\% (Hình 12). Sau khi lượt xem bắt đầu, tỉ lệ xem hết giữa các discovery channel tương đương nhau, dao động từ 58\% đến 66\%. Kết quả cho thấy khác biệt chủ yếu nằm ở khả năng thúc đẩy người xem bắt đầu xem phim. Đội Product có thể sử dụng số liệu này để điều chỉnh thứ tự các hàng trên Home.
 
 \begin{quote}
 \textbf{Cần xét nguồn gốc dữ liệu khi diễn giải chỉ số.} Trong 75,3\% lượt mở từ gợi ý, phim tương tự và trending (839.967 lượt), mục đích là chấm điểm phim đã xem ở nơi khác, không phải khám phá nội dung. Nếu không phân loại các lượt này, hiệu quả của những channel đó sẽ bị đánh giá thấp. Pipeline gắn view intent cho từng lượt mở và chỉ đưa các lượt khám phá vào phép tính.
@@ -1088,7 +1088,7 @@ BR5 cung cấp cho đội Marketing chỉ số giữ chân theo tháng và danh 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{./images/hinh-13-br5-br8-marketing.png}
-\caption[BR5 và BR8: dashboard, trang Marketing (mục 4.2)]{Trang Marketing: BR5 (giữ chân, danh sách user cần kéo lại) ở trên, BR8 (chuyển đổi từ My list) ở dưới.}
+\caption[BR5 và BR8: dashboard, trang Marketing (mục 4.2)]{Trang Marketing: BR5 (giữ chân, danh sách user cần kéo lại) ở trên, BR8 (chuyển đổi từ Danh sách yêu thích) ở dưới.}
 \label{fig:13}
 \end{figure}
 
@@ -1129,12 +1129,12 @@ Một chỉ số khác là tỉ lệ tìm kiếm có kết quả nhưng không c
 
 \subsubsection*{BR8 \textperiodcentered{} Phim đã lưu có được xem không (Marketing, dashboard)}
 
-BR8 hỗ trợ đội Marketing theo dõi tỉ lệ chuyển đổi từ My list sang lượt xem. Trong 26.114 lần lưu, 28,4\% phim được xem hoặc chấm điểm khi vẫn còn trong danh sách; thời gian trung bình đến hành động là 30,1 ngày và trung vị là 16 ngày. Có 18.704 lần lưu vẫn đang chờ chuyển đổi (Hình 13). Danh sách phim này có thể được sử dụng làm đầu vào cho email hoặc thông báo nhắc xem. Trên web app, trang Bookmarks của tài khoản kiểm thử thể hiện hai trạng thái được Pipeline phân biệt: \textit{The} \textit{Dark Knight} chỉ được lưu, còn \textit{Pulp Fiction} được lưu rồi chấm 4 sao (Hình 17).
+BR8 hỗ trợ đội Marketing theo dõi tỉ lệ chuyển đổi từ Danh sách yêu thích sang lượt xem. Trong 26.114 lần lưu, 28,4\% phim được xem hoặc chấm điểm khi vẫn còn trong danh sách; thời gian trung bình đến hành động là 30,1 ngày và trung vị là 16 ngày. Có 18.704 lần lưu vẫn đang chờ chuyển đổi (Hình 13). Danh sách phim này có thể được sử dụng làm đầu vào cho email hoặc thông báo nhắc xem. Trên web app, trang Bookmarks của tài khoản kiểm thử thể hiện hai trạng thái được Pipeline phân biệt: \textit{The} \textit{Dark Knight} chỉ được lưu, còn \textit{Pulp Fiction} được lưu rồi chấm 4 sao (Hình 17).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{./images/hinh-17-br8-my-list.png}
-\caption[BR8 trên web: My list (mục 4.2)]{BR8 trên web: My list (trang Bookmarks) có The Dark Knight (chỉ lưu) và Pulp Fiction (lưu rồi chấm 4 sao). Phần BR8 trên dashboard ở Hình 13.}
+\caption[BR8 trên web: Danh sách yêu thích (mục 4.2)]{BR8 trên web: Danh sách yêu thích (trang Bookmarks) có The Dark Knight (chỉ lưu) và Pulp Fiction (lưu rồi chấm 4 sao). Phần BR8 trên dashboard ở Hình 13.}
 \label{fig:17}
 \end{figure}
 
@@ -1598,7 +1598,7 @@ Hit rate@10 & Tỉ lệ user có ít nhất một phim trúng trong 10 gợi ý 
 Quarantine & Tách dòng dữ liệu sai sang một bảng riêng, dòng đúng đi tiếp \\
 Record linkage & Ghép các bản ghi của cùng một đối tượng (ở đây là một phim) từ nhiều nguồn khác nhau \\
 Mart & Bảng tổng hợp sẵn cho một câu hỏi hoặc một nhóm người dùng, đọc từ các bảng fact \\
-Discovery channel & Nơi người xem bấm vào để mở trang phim: tìm kiếm, gợi ý, trending, phim tương tự, My list \\
+Discovery channel & Nơi người xem bấm vào để mở trang phim: tìm kiếm, gợi ý, trending, phim tương tự, Danh sách yêu thích \\
 Offline / online layer & Lớp gợi ý tính trước theo vòng trên lakehouse / lớp tính ngay lúc app hỏi trong PostgreSQL \\
 Manifest & Bản ghi số dòng của từng file nguồn, dùng để kiểm tra dữ liệu có bị thiếu khi nạp không \\
 View intent & Mục đích của một lượt mở trang phim: để khám phá hay chỉ để chấm phim đã xem \\
