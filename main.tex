@@ -330,7 +330,7 @@ BR8 & Marketing & Hiệu quả Danh sách yêu thích và tỷ lệ xem phim đ�
 
 \subsection{Nguồn dữ liệu}\label{sec:2.3}
 
-Bốn nguồn, và nguồn nào cũng được áp dụng ít nhất một BR:
+Bao gồm bốn nguồn, trong đó nguồn nào cũng được áp dụng cho ít nhất một BR:
 
 \begingroup
 \small
@@ -784,7 +784,7 @@ Bronze có bốn dòng, silver luôn chỉ có một kết quả đúng; lịch 
 
 \textbf{Star schema.} Tầng gold được mô hình hoá theo star schema của Kimball: fact ghi sự kiện có số đo, dimension mô tả đối tượng (phim, user, ngày).
 
-\textbf{Accumulating snapshot.} Hai fact xem phim và lưu phim dùng dạng này: mỗi lượt xem hay mỗi lần lưu là một dòng, được cập nhật dần khi các mốc tiếp theo xảy ra (xem hết; được xem, được chấm, bị bỏ), đúng với câu hỏi của BR6 và BR8.
+\textbf{Accumulating snapshot.} Hai fact xem phim và lưu phim dùng dạng này: mỗi lượt xem hay mỗi lần lưu là một dòng, được cập nhật dần khi các mốc tiếp theo xảy ra (xem hết; được xem, được chấm, bị bỏ), dựa theo yêu cầu của BR6 và BR8.
 
 \textbf{Mart.} Mỗi BR trên dashboard có mart riêng, tính sẵn theo một mức cố định và chỉ đọc bảng gold: các fact, thêm dimension hoặc \texttt{mart\dbsep{}movie\dbsep{}catalog} khi cần thông tin phim hay user. Gold có 21 bảng: 3 dimension, 7 fact, 9 mart và 2 bảng gợi ý (Hình 5). Các fact được mô tả ở Bảng 11 bên dưới, mart và bảng gợi ý ở Phụ lục E (Bảng 28).
 
@@ -816,14 +816,16 @@ Bronze có bốn dòng, silver luôn chỉ có một kết quả đúng; lịch 
 \endfoot
 \bottomrule
 \endlastfoot
-Rating & Rating hiện tại của một người cho một phim (lịch sử chấm lại nằm ở silver) & 32.002.850 \\
-Tag & Một tag & 1.972.972 \\
-Mở trang phim & Một lần mở, kèm nơi mở, view intent và có dẫn tới xem không & 1.145.626 \\
-Tìm kiếm & Một lượt tìm, kèm số kết quả và phim được bấm nếu có & 51.289 \\
-Xem phim & Một lượt xem, gom nhiều sự kiện của player & 48.460 \\
-Lưu phim & Một lần lưu, từ lúc lưu tới lúc xem, chấm hoặc bỏ & 26.114 \\
-Phản hồi & Một phản hồi, nối với lượt xem gần nhất trong 24 giờ & 1.847 \\
-Dimension phim, user, ngày & Một phim, một user, một ngày & 83.083 (thêm 1 phim TMDB đã gỡ nhưng còn hoạt động trỏ tới); 202.425; 10.534 \\
+\texttt{fact\dbsep{}rating} & Một cặp người dùng--phim, lưu điểm đánh giá hiện tại, thời điểm chấm và nguồn dữ liệu. Lịch sử chấm lại được giữ ở silver. & 32.002.850 \\
+\texttt{fact\dbsep{}tag} & Một bản ghi gắn thẻ cho phim, gồm người gắn, nội dung thẻ, khoá thẻ dùng để nhóm, thời điểm và nguồn dữ liệu. & 1.972.972 \\
+\texttt{fact\dbsep{}movie\dbsep{}view} & Một lần mở trang phim, gồm người dùng, phiên, thời điểm, kênh khám phá, vị trí phim và ý định mở; kèm các cờ ghi nhận lượt mở dẫn tới xem, xem hết hoặc chấm điểm. & 1.145.626 \\
+\texttt{fact\dbsep{}search} & Một lượt tìm kiếm, lưu chuỗi gốc và chuẩn hoá, bộ lọc thể loại, thời điểm, số kết quả và phim được bấm nếu có. & 51.289 \\
+\texttt{fact\dbsep{}playback} & Một lượt phát phim, tổng hợp các sự kiện của player thành trạng thái, thời lượng và tỉ lệ xem, thiết bị, phiên bản player, độ trễ khởi phát, buffering và lỗi. & 48.460 \\
+\texttt{fact\dbsep{}watchlist} & Một cặp người dùng--phim được lưu, theo dõi thời điểm lưu, xem, chấm và bỏ; kèm trạng thái, cờ xem hết và số ngày từ lúc lưu tới xem hoặc chấm. & 26.114 \\
+\texttt{fact\dbsep{}feedback} & Một phản hồi về playback, gồm loại phản hồi, thời điểm, người dùng, phim, thiết bị và phiên bản player; liên kết với lượt phát gần nhất trong 24 giờ. & 1.847 \\
+\texttt{dim\dbsep{}movie} & Một phim, gồm mã liên kết MovieLens/TMDB/IMDb, tên, thể loại, năm phát hành, thời lượng, điểm TMDB/IMDb, từ khoá, đạo diễn, diễn viên và cờ còn trong catalog. Có một phim TMDB đã gỡ nhưng vẫn còn hoạt động tham chiếu. & 83.083 \\
+\texttt{dim\dbsep{}user} & Một tài khoản, gồm nguồn MovieLens/simulator/app, cờ tài khoản mô phỏng, thông tin hồ sơ và cờ hồ sơ sinh tự động, thời điểm xuất hiện đầu tiên và hoạt động gần nhất. & 202.425 \\
+\texttt{dim\dbsep{}date} & Một ngày, gồm khoá ngày, thứ, tuần, tháng, quý, năm và các cờ cuối tuần, sau thời điểm ra mắt; dùng để nhóm và lọc các fact theo lịch. & 10.534 \\
 \end{longtable}
 \endgroup
 
