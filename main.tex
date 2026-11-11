@@ -996,7 +996,7 @@ Trang & Home, Advanced Search, trang phim, Danh sách yêu thích (trang Bookmar
 
 \textbf{Web app.} Trang Home gồm ô tìm kiếm, hàng \textquotedbl{}Top 10 this week\textquotedbl{} (BR2), hàng \textquotedbl{}Picked for you\textquotedbl{} (BR1) và các hàng phim theo thể loại. Trang phim hiển thị thông tin TMDB, điểm IMDb, đạo diễn và diễn viên từ IMDb, các nút chấm điểm và lưu phim, player, cùng hàng \textquotedbl{}More like X\textquotedbl{} (BR3). Mỗi thao tác được ghi nhận thành sự kiện kèm vị trí tương tác và thứ tự trong hàng, phục vụ đo lường discovery channel cho BR4.
 
-\textbf{Dashboard phân tích} gồm trang Overview với bảng 8 BR (Hình 8) và bốn trang tương ứng với bốn đội. Cả hai dashboard được định nghĩa bằng code và triển khai cùng job, cho phép tái tạo trên workspace mới. Các trang và bộ lọc gồm:
+\textbf{Dashboard phân tích} gồm trang Overview với bảng 8 BR (Hình 8) và bốn trang tương ứng với bốn internal team. Cả hai dashboard được định nghĩa bằng code và triển khai cùng job, cho phép tái tạo trên workspace mới. Các trang và bộ lọc gồm:
 
 \begin{itemize}
   \item \textbf{Overview:} các chỉ số trong 30 ngày gần nhất (user hoạt động, lượt xem, giờ xem, rating, tìm kiếm và phản hồi), kèm thời điểm cập nhật dữ liệu; tổng catalog và tổng tài khoản được trình bày riêng để phân biệt với số liệu trong 30 ngày.
@@ -1015,7 +1015,7 @@ Các tỉ lệ không xác định do mẫu số bằng 0 được để trống
 \label{fig:07}
 \end{figure}
 
-\subsection{Demo từng BR}\label{sec:4.2}
+\subsection{Phân tích từng BR}\label{sec:4.2}
 
 Phần này trình bày nhu cầu dữ liệu của từng BR, kết quả khai thác trên ứng dụng và cách đội liên quan sử dụng kết quả. Số liệu và hình ảnh được ghi nhận ngày 08/11/2026; web app được kiểm thử bằng tài khoản mới, còn dashboard được ghi nhận sau khi vòng daily kết thúc lúc 03:32.
 
@@ -1066,7 +1066,7 @@ BR3 giúp người xem tìm các phim có nội dung tương đồng với phim 
 
 \subsubsection*{BR4 \textperiodcentered{} Discovery channel dẫn tới xem phim (Product, dashboard)}
 
-BR4 hỗ trợ đội Product xác định discovery channel nào chuyển đổi lượt khám phá phim thành lượt xem. Trong các lượt mở trang có mục đích khám phá, tìm kiếm dẫn tới xem với tỉ lệ 74,8\%, Danh sách yêu thích đạt 57,0\%, phim tương tự đạt 14,6\%, gợi ý đạt 12,5\% và trending đạt 7,1\% (Hình 13). Sau khi lượt xem bắt đầu, tỉ lệ xem hết giữa các discovery channel tương đương nhau, dao động từ 58\% đến 66\%. Kết quả cho thấy khác biệt chủ yếu nằm ở khả năng thúc đẩy người xem bắt đầu xem phim. Đội Product có thể sử dụng số liệu này để điều chỉnh thứ tự các hàng trên Home.
+Trang dashboard của BR4 hỗ trợ đội Product xác định discovery channel nào chuyển đổi lượt khám phá phim thành lượt xem. Trong các lượt mở trang có mục đích khám phá, tìm kiếm dẫn tới xem với tỉ lệ 74,8\%, Danh sách yêu thích đạt 57,0\%, phim tương tự đạt 14,6\%, gợi ý đạt 12,5\% và trending đạt 7,1\% (Hình 13). Sau khi lượt xem bắt đầu, tỉ lệ xem hết giữa các discovery channel tương đương nhau, dao động từ 58\% đến 66\%. Kết quả cho thấy khác biệt chủ yếu nằm ở khả năng thúc đẩy người xem bắt đầu xem phim. Đội Product có thể sử dụng số liệu này để điều chỉnh thứ tự các hàng trên Home.
 
 \begin{quote}
 \textbf{Cần xét nguồn gốc dữ liệu khi diễn giải chỉ số.} Trong 75,3\% lượt mở từ gợi ý, phim tương tự và trending (839.967 lượt), mục đích là chấm điểm phim đã xem ở nơi khác, không phải khám phá nội dung. Nếu không phân loại các lượt này, hiệu quả của những channel đó sẽ bị đánh giá thấp. Pipeline gắn view intent cho từng lượt mở và chỉ đưa các lượt khám phá vào phép tính.
@@ -1079,9 +1079,9 @@ BR4 hỗ trợ đội Product xác định discovery channel nào chuyển đổ
 \label{fig:12}
 \end{figure}
 
-\subsubsection*{BR5 \textperiodcentered{} Giữ chân và kéo lại user (Marketing, dashboard)}
+\subsubsection*{BR5 \textperiodcentered{} Giữ chân user (Marketing, dashboard)}
 
-BR5 cung cấp cho đội Marketing chỉ số giữ chân theo tháng và danh sách user cần được tiếp cận lại. Tháng 09/2026, tháng gần nhất đã chốt dữ liệu, có tỉ lệ giữ chân 64,4\% (2.048 trên 3.180 user hoạt động); tám tháng trước đó có tỉ lệ dao động từ 54,0\% đến 62,4\%. Có 3.892 user thuộc phân khúc Cooling, tức không hoạt động trong 30 ngày nhưng chưa quá 180 ngày; trong số này, 1.945 người có thể loại yêu thích là Drama (Hình 14). Danh sách kèm thể loại yêu thích có thể được tải trực tiếp từ dashboard để phục vụ chiến dịch tiếp cận lại. Khi triển khai trên nền tảng thực tế, quy trình có thể được tích hợp thêm với hệ thống email.
+Trang dashboard của BR5 cung cấp cho đội Marketing chỉ số giữ chân theo tháng và danh sách user cần được tiếp cận lại. Tháng 09/2026, tháng gần nhất đã chốt dữ liệu, có tỉ lệ giữ chân 64,4\% (2.048 trên 3.180 user hoạt động); tám tháng trước đó có tỉ lệ dao động từ 54,0\% đến 62,4\%. Có 3.892 user thuộc phân khúc Cooling, tức không hoạt động trong 30 ngày nhưng chưa quá 180 ngày; trong số này, 1.945 người có thể loại yêu thích là Drama (Hình 14). Danh sách kèm thể loại yêu thích có thể được tải trực tiếp từ dashboard để phục vụ chiến dịch tiếp cận lại. Khi triển khai trên nền tảng thực tế, quy trình có thể được tích hợp thêm với hệ thống email.
 
 \begin{figure}[H]
 \centering
@@ -1092,7 +1092,7 @@ BR5 cung cấp cho đội Marketing chỉ số giữ chân theo tháng và danh 
 
 \subsubsection*{BR6 \textperiodcentered{} Chất lượng phát (Platform, dashboard)}
 
-BR6 hỗ trợ đội Platform theo dõi chất lượng phát theo thiết bị và phiên bản player, đồng thời đối chiếu với phản hồi của người dùng. Trên mobile, phiên bản 4.0.7 có tỉ lệ lỗi 2,8\%, thời gian khởi động p95 cao nhất theo ngày là 8.933 ms và 72,7 phản hồi trên 1.000 lượt xem. Trong khi đó, phiên bản 4.1.2 trên cùng thiết bị có tỉ lệ lỗi 1,1\%, thời gian khởi động 4.227 ms và 26,9 phản hồi trên 1.000 lượt xem (Hình 15).
+Trang dashboard của BR6 hỗ trợ đội phát triển Platform theo dõi chất lượng phát theo thiết bị và phiên bản player, đồng thời đối chiếu với phản hồi của người dùng. Trên mobile, phiên bản 4.0.7 có tỉ lệ lỗi 2,8\%, thời gian khởi động p95 cao nhất theo ngày là 8.933 ms và 72,7 phản hồi trên 1.000 lượt xem. Trong khi đó, phiên bản 4.1.2 trên cùng thiết bị có tỉ lệ lỗi 1,1\%, thời gian khởi động 4.227 ms và 26,9 phản hồi trên 1.000 lượt xem (Hình 15).
 
 Nội dung phản hồi cũng cho thấy khác biệt giữa hai phiên bản: 81\% phản hồi gắn với phiên bản 4.0.7 liên quan đến lỗi phát (322/398), so với 59\% ở phiên bản 4.1.2 (461/782). Kết quả gợi ý ưu tiên yêu cầu cập nhật từ phiên bản 4.0.7 lên 4.1.2.
 
@@ -1105,7 +1105,7 @@ Nội dung phản hồi cũng cho thấy khác biệt giữa hai phiên bản: 8
 
 \subsubsection*{BR7 \textperiodcentered{} Phim người dùng tìm mà catalog chưa có (Content, web app và dashboard)}
 
-BR7 cung cấp cho đội Content thông tin về nhu cầu tìm kiếm đối với các phim chưa có trong catalog. Trong 50.233 lượt tìm kiếm bằng văn bản, 40,0\% không trả về kết quả (Hình 16).
+Trang dashboard của BR7 cung cấp cho đội Content thông tin về nhu cầu tìm kiếm đối với các phim chưa có trong catalog. Trong 50.233 lượt tìm kiếm bằng văn bản, 40,0\% không trả về kết quả (Hình 16).
 
 Trong số lượt tìm kiếm không có kết quả, 57,8\% tập trung ở 125 chuỗi được lặp lại từ 5 người trở lên. Các chuỗi có tần suất cao nhất gồm tên phim phát hành sau năm 2023 (\textquotedbl{}wicked for good\textquotedbl{}: 1.252 lượt, \textquotedbl{}zootopia 2\textquotedbl{}: 730 lượt, \textquotedbl{}avatar fire and ash\textquotedbl{}: 630 lượt) và phim Việt (\textquotedbl{}mai tran thanh\textquotedbl{}: 442 lượt, \textquotedbl{}lat mat 7\textquotedbl{}: 430 lượt) (Hình 17). Danh sách này có thể được sử dụng để ưu tiên bổ sung phim vào catalog theo nhu cầu. Các chuỗi còn lại phần lớn là tên phim có sẵn nhưng bị nhập sai chính tả, cho thấy nhu cầu cải thiện khả năng xử lý lỗi chính tả của chức năng tìm kiếm.
 
@@ -1127,7 +1127,7 @@ Một chỉ số khác là tỉ lệ tìm kiếm có kết quả nhưng không c
 
 \subsubsection*{BR8 \textperiodcentered{} Phim đã lưu có được xem không (Marketing, dashboard)}
 
-BR8 hỗ trợ đội Marketing theo dõi tỉ lệ chuyển đổi từ Danh sách yêu thích sang lượt xem. Trong 26.114 lần lưu, 28,4\% phim được xem hoặc chấm điểm khi vẫn còn trong danh sách; thời gian trung bình đến hành động là 30,1 ngày và trung vị là 16 ngày. Có 18.704 lần lưu vẫn đang chờ chuyển đổi (Hình 14). Danh sách phim này có thể được sử dụng làm đầu vào cho email hoặc thông báo nhắc xem. Trên web app, trang Bookmarks của tài khoản kiểm thử thể hiện hai trạng thái được Pipeline phân biệt: \textit{The} \textit{Dark Knight} chỉ được lưu, còn \textit{Pulp Fiction} được lưu rồi chấm 4 sao (Hình 18).
+Trang dashboard của BR8 hỗ trợ đội Marketing theo dõi tỉ lệ chuyển đổi từ Danh sách yêu thích sang lượt xem. Trong 26.114 lần lưu, 28,4\% phim được xem hoặc chấm điểm khi vẫn còn trong danh sách; thời gian trung bình đến hành động là 30,1 ngày và trung vị là 16 ngày. Có 18.704 lần lưu vẫn đang chờ chuyển đổi (Hình 14). Danh sách phim này có thể được sử dụng làm đầu vào cho email hoặc thông báo nhắc xem. Trên web app, trang Bookmarks của tài khoản kiểm thử thể hiện hai trạng thái được Pipeline phân biệt: \textit{The} \textit{Dark Knight} chỉ được lưu, còn \textit{Pulp Fiction} được lưu rồi chấm 4 sao (Hình 18).
 
 \begin{figure}[H]
 \centering
