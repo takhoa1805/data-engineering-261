@@ -816,26 +816,18 @@ Bronze có bốn dòng, silver luôn chỉ có một kết quả đúng; lịch 
 \endfoot
 \bottomrule
 \endlastfoot
-\texttt{fact\dbsep{}rating} & Một cặp người dùng--phim, lưu điểm đánh giá hiện tại, thời điểm chấm và nguồn dữ liệu. Lịch sử chấm lại được giữ ở silver. & 32.002.850 \\
-\texttt{fact\dbsep{}tag} & Một bản ghi gắn thẻ cho phim, gồm người gắn, nội dung thẻ, khoá thẻ dùng để nhóm, thời điểm và nguồn dữ liệu. & 1.972.972 \\
-\texttt{fact\dbsep{}movie\dbsep{}view} & Một lần mở trang phim, gồm người dùng, phiên, thời điểm, kênh khám phá, vị trí phim và ý định mở; kèm các cờ ghi nhận lượt mở dẫn tới xem, xem hết hoặc chấm điểm. & 1.145.626 \\
+\texttt{fact\dbsep{}rating} & Cặp user--movie, lưu điểm đánh giá hiện tại, thời điểm chấm và nguồn dữ liệu. & 32.002.850 \\
+\texttt{fact\dbsep{}tag} & Gắn thẻ cho phim, gồm người gắn, nội dung thẻ, khoá thẻ dùng để nhóm, thời điểm và nguồn dữ liệu. & 1.972.972 \\
+\texttt{fact\dbsep{}movie\dbsep{}view} & Một lần mở trang phim, gồm user, session, thời điểm, kênh khám phá, vị trí phim và ý định mở; kèm các flag ghi nhận lượt mở dẫn tới xem, xem hết hoặc chấm điểm. & 1.145.626 \\
 \texttt{fact\dbsep{}search} & Một lượt tìm kiếm, lưu chuỗi gốc và chuẩn hoá, bộ lọc thể loại, thời điểm, số kết quả và phim được bấm nếu có. & 51.289 \\
-\texttt{fact\dbsep{}playback} & Một lượt phát phim, tổng hợp các sự kiện của player thành trạng thái, thời lượng và tỉ lệ xem, thiết bị, phiên bản player, độ trễ khởi phát, buffering và lỗi. & 48.460 \\
-\texttt{fact\dbsep{}watchlist} & Một cặp người dùng--phim được lưu, theo dõi thời điểm lưu, xem, chấm và bỏ; kèm trạng thái, cờ xem hết và số ngày từ lúc lưu tới xem hoặc chấm. & 26.114 \\
+\texttt{fact\dbsep{}playback} & Một lượt phát phim, tổng hợp các sự kiện của player thành trạng thái, thời lượng và tỉ lệ xem, thiết bị, phiên bản player, độ trễ khi phát, buffering và lỗi. & 48.460 \\
+\texttt{fact\dbsep{}watchlist} & Một cặp user--movie được lưu, theo dõi thời điểm lưu, xem, chấm và bỏ; kèm trạng thái, cờ xem hết và số ngày từ lúc lưu tới xem hoặc chấm. & 26.114 \\
 \texttt{fact\dbsep{}feedback} & Một phản hồi về playback, gồm loại phản hồi, thời điểm, người dùng, phim, thiết bị và phiên bản player; liên kết với lượt phát gần nhất trong 24 giờ. & 1.847 \\
 \texttt{dim\dbsep{}movie} & Một phim, gồm mã liên kết MovieLens/TMDB/IMDb, tên, thể loại, năm phát hành, thời lượng, điểm TMDB/IMDb, từ khoá, đạo diễn, diễn viên và cờ còn trong catalog. Có một phim TMDB đã gỡ nhưng vẫn còn hoạt động tham chiếu. & 83.083 \\
 \texttt{dim\dbsep{}user} & Một tài khoản, gồm nguồn MovieLens/simulator/app, cờ tài khoản mô phỏng, thông tin hồ sơ và cờ hồ sơ sinh tự động, thời điểm xuất hiện đầu tiên và hoạt động gần nhất. & 202.425 \\
 \texttt{dim\dbsep{}date} & Một ngày, gồm khoá ngày, thứ, tuần, tháng, quý, năm và các cờ cuối tuần, sau thời điểm ra mắt; dùng để nhóm và lọc các fact theo lịch. & 10.534 \\
 \end{longtable}
 \endgroup
-
-\textbf{Lưu ý khi khai thác gold.}
-
-\begin{itemize}
-  \item Khi nối nhiều fact với nhau, phải gom từng fact về cùng một mức (theo user hoặc theo phim) trước khi nối, nếu không số đếm sẽ bị nhân lên.
-  \item Khi gộp tỉ lệ của nhiều nhóm, cộng tử số và mẫu số rồi mới chia, không lấy trung bình của các tỉ lệ; số user khác nhau phải đếm lại trên cả nhóm được chọn vì một user có thể thuộc nhiều nhóm.
-  \item Mart đã tổng hợp sẵn theo một mức cố định, nên câu hỏi cần một khoảng thời gian tuỳ ý phải tính lại từ fact.
-\end{itemize}
 
 \subsection{Kiểm soát chất lượng dữ liệu}\label{sec:3.5}
 
