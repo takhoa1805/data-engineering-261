@@ -188,7 +188,7 @@
 
 CineLake là một nền tảng xem, chấm điểm và khám phá phim. Đồ án xây dựng phần kỹ thuật dữ liệu phía sau nền tảng đó: một lakehouse trên Databricks thu dữ liệu từ bốn nguồn (MovieLens 32M với 32 triệu rating thật, TMDB, IMDb và database của web app), làm sạch, kiểm soát chất lượng, rồi phục vụ 8 yêu cầu nghiệp vụ (BR) cho năm nhóm người dùng: 3 BR trên web app cho người xem và 5 BR trên dashboard cho các các bộ phận nội bộ. Thay đổi trên app được đưa vào lakehouse liên tục bằng kỹ thuật CDC (Debezium và Kafka); dữ liệu đi qua ba tầng bronze, silver, gold và 45 DQ check trước khi tới người dùng.
 
-Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check đạt; 789.359 rating đi qua đường CDC khớp từng dòng với dữ liệu gốc; một vòng xử lý lakehouse mất 7,6 phút; gợi ý cá nhân đạt hit rate@10 20,43\% so với 17,19\% của cách gợi ý phim phổ biến. Cả 8 BR đều được ứng dụng trả lời đúng trong kịch bản kiểm thử.
+Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check đạt; 789.359 rating đi qua đường CDC khớp từng dòng với dữ liệu gốc; một vòng xử lý lakehouse mất 7,6 phút; gợi ý cá nhân đạt Hit rate of 10 20,43\% so với 17,19\% của cách gợi ý phim phổ biến. Cả 8 BR đều được ứng dụng trả lời đúng trong kịch bản kiểm thử.
 
 \clearpage
 \begingroup
@@ -332,7 +332,7 @@ Cột Dữ liệu cho biết kết quả của BR dựa trên dữ liệu thật
 
 \subsection{Nguồn dữ liệu}\label{sec:2.3}
 
-Bốn nguồn, và nguồn nào cũng được dùng cho ít nhất một BR:
+Bốn nguồn, và nguồn nào cũng được Áp dụng ít nhất một BR:
 
 \begingroup
 \small
@@ -343,11 +343,11 @@ Bốn nguồn, và nguồn nào cũng được dùng cho ít nhất một BR:
 \begin{longtable}{@{}L{0.23\reporttablewidth} L{0.31\reporttablewidth} L{0.21\reporttablewidth} L{0.25\reporttablewidth}@{}}
 \caption[Bốn nguồn dữ liệu (mục 2.3)]{Bốn nguồn dữ liệu}\label{tab:04} \\
 \toprule
-\textbf{Nguồn} & \textbf{Nội dung} & \textbf{Cách thu} & \textbf{Dùng cho} \\
+\textbf{Nguồn} & \textbf{Nội dung} & \textbf{Cách thu} & \textbf{Áp dụng} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Nguồn} & \textbf{Nội dung} & \textbf{Cách thu} & \textbf{Dùng cho} \\
+\textbf{Nguồn} & \textbf{Nội dung} & \textbf{Cách thu} & \textbf{Áp dụng} \\
 \midrule
 \endhead
 \midrule
@@ -552,8 +552,6 @@ Vì dashboard đọc thẳng bảng gold, nhóm không phải chép dữ liệu 
 
 \subsubsection*{Cách khai thác dữ liệu cho ứng dụng}
 
-Nhìn chung, mỗi công nghệ được giao đúng phần việc mà nó làm tốt nhất:
-
 \begingroup
 \small
 \setstretch{1.12}
@@ -561,22 +559,21 @@ Nhìn chung, mỗi công nghệ được giao đúng phần việc mà nó làm 
 \renewcommand{\arraystretch}{1.18}
 \setlength{\reporttablewidth}{\dimexpr\linewidth-4\tabcolsep\relax}
 \begin{longtable}{@{}L{0.32\reporttablewidth} L{0.24\reporttablewidth} L{0.44\reporttablewidth}@{}}
-\caption[Phân vai công nghệ khi khai thác dữ liệu (mục 3.1)]{Phân vai công nghệ khi khai thác dữ liệu}\label{tab:07} \\
+\caption[Mục đích các công nghệ được sử dụng (mục 3.1)]{Phân vai công nghệ khi khai thác dữ liệu}\label{tab:07} \\
 \toprule
-\textbf{Việc} & \textbf{Giao cho} & \textbf{Lý do} \\
+\textbf{Yêu cầu} & \textbf{Công nghệ} & \textbf{Lý do} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Việc} & \textbf{Giao cho} & \textbf{Lý do} \\
+\textbf{Yêu cầu} & \textbf{Công nghệ} & \textbf{Lý do} \\
 \midrule
 \endhead
 \midrule
 \endfoot
 \bottomrule
 \endlastfoot
-Trả lời web app trong mili giây & PostgreSQL & Database giao dịch, dữ liệu nóng \\
-Record linkage, làm sạch, giữ toàn bộ lịch sử & Lakehouse (Spark, Delta) & Khối lượng lớn, cần xử lý phân tán \\
-Tính trước việc nặng (độ giống giữa 83 nghìn phim) & Lakehouse, rồi chép về PostgreSQL & Tính một lần, đọc nhiều lần \\
+Trả lời web app trong mili giây & PostgreSQL & Database transaction, hot data\\
+Record linkage, làm sạch dữ liệu, giữ toàn bộ lịch sử & Lakehouse (Spark, Delta) & Khối lượng lớn, cần xử lý phân tán \\
 Phản ứng với hành động vừa xảy ra & Hàm SQL trong PostgreSQL & Không phải chờ một vòng lakehouse \\
 Phân tích cho các bộ phận nội bộ & Dashboard đọc tầng gold & Bảng đã tổng hợp sẵn \\
 \end{longtable}
@@ -597,7 +594,7 @@ Các công nghệ ở mục 3.1 được ghép thành một vòng dữ liệu kh
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{./images/hinh-01-kien-truc-tong-the.png}
-\caption[Kiến trúc tổng thể của CineLake (mục 3.2)]{Kiến trúc tổng thể của CineLake: dữ liệu đi một vòng khép kín từ app, qua CDC và lakehouse, rồi về lại app.}
+\caption[Kiến trúc tổng thể của CineLake (mục 3.2)]{Kiến trúc tổng thể của CineLake: dữ liệu đi một vòng khép kín từ app đến CDC và lakehouse và quay về lại app.}
 \label{fig:01}
 \end{figure}
 
@@ -612,24 +609,26 @@ Bốn nguyên tắc thiết kế chi phối các quyết định bên dưới:
 
 \subsection{Thu thập dữ liệu}\label{sec:3.3}
 
-Hai đường vào cùng kết thúc ở một vùng landing trên Volume, nơi giữ nguyên file gốc. Giữ file gốc giúp dựng lại toàn bộ lakehouse mà không phải tải lại nguồn.
+Hai đường vào cùng kết thúc ở một vùng landing trên Volume, nơi giữ nguyên file gốc. Giữ file gốc giúp dựng lại toàn bộ lakehouse mà không phải tải lại nguồn. \newpage
 
-\textbf{Đường batch cho nguồn ngoài.} MovieLens được tải một lần. IMDb được tải lại tối đa mỗi tuần một lần, mỗi lần là một snapshot riêng. TMDB được gọi qua API với nhiều luồng song song và giới hạn tốc độ. Mỗi file nguồn được ghi số dòng vào một manifest; một DQ check so số dòng ở bronze với manifest này để phát hiện dữ liệu bị thiếu.
+\textbf{Đường batch cho external source}: \\
+MovieLens được tải một lần. IMDb được tải lại tối đa mỗi tuần một lần, mỗi lần là một snapshot riêng. TMDB được gọi qua API với nhiều luồng song song và giới hạn tốc độ. Mỗi file nguồn được ghi số dòng vào một manifest; một DQ check so số dòng ở bronze với manifest này để phát hiện dữ liệu bị thiếu.
 
-\begin{quote}
-\textbf{Chỉ kéo phần thay đổi.} Lần kéo TMDB đầu tiên cần khoảng 45 nghìn yêu cầu và mất 23 phút. Các lần sau, pipeline hỏi TMDB trước xem phim nào vừa đổi, nên vòng daily ngày 08/11/2026 chỉ kéo 2.902 phim, trong 107 giây.
-\end{quote}
 
-\textbf{Đường CDC cho database của app.} Mỗi thay đổi trên app đi qua bốn chặng (Hình 2): PostgreSQL ghi vào WAL; Debezium đọc WAL và đẩy vào Kafka, mỗi tin mang loại thao tác và vị trí LSN trong WAL; sink gom tin thành file (đủ 20.000 tin hoặc sau 5 giây) và đẩy lên Volume; Databricks nạp file vào bronze. Sink chỉ báo \textquotedbl{}đã đọc\textquotedbl{} cho Kafka sau khi file đã nằm trên Volume, nên nếu sink dừng giữa chừng thì lần sau nó gửi lại một đoạn: không mất tin, có thể trùng, và silver loại phần trùng nhờ LSN.
+\textbf{Đường CDC cho database của app (Streaming)}:\\
+Mỗi thay đổi trên app đi qua bốn chặng. \\
+1. PostgreSQL ghi vào WAL \\
+2. Debezium đọc WAL và đẩy vào Kafka, mỗi tin mang loại thao tác và vị trí LSN trong WAL \\
+3 sink gom tin thành file (đủ 20.000 tin hoặc sau 5 giây) và đẩy lên Volume \\ 
+4. Databricks nạp file vào bronze. Sink chỉ báo \textquotedbl{}đã đọc\textquotedbl{} cho Kafka sau khi file đã nằm trên Volume, nên nếu sink dừng giữa chừng thì lần sau sẽ gửi lại một đoạn, tuy nhiên có thể trùng, và silver sẽ loại sau đó\@.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{./images/hinh-02b-cdc-tuan-tu.png}
-\caption[Trình tự một thay đổi đi qua đường CDC (mục 3.3)]{Trình tự một thay đổi đi qua đường CDC: sink chỉ commit offset sau khi file đã lên Volume; nếu dừng giữa chừng, tin được gửi lại và silver loại bản trùng theo LSN.}
+\caption[Trình tự một thay đổi đi qua đường CDC (mục 3.3)]{Trình tự một thay đổi đi qua đường CDC: sink chỉ commit offset sau khi file đã lên Volume}
 \label{fig:cdc-seq}
 \end{figure}
 
-\textbf{Phát lại MovieLens và simulator.} Khoảng 31 triệu rating trước ngày ra mắt được nạp thẳng vào lakehouse. 789.359 rating thật từ ngày ra mắt tới 09/10/2026 được phát lại vào database của app qua đúng các hàm ghi của app, nên đi hết đường CDC như hoạt động thật. Sau đó, simulator chạy mỗi ngày, sinh lượt xem, tìm kiếm, lưu phim, phản hồi và user mới, cũng qua các hàm của app.
 
 \textbf{Database của app trên Neon.} Database chia thành bốn schema, và chỉ schema \texttt{app} được CDC theo dõi (Bảng 8). Sáu bảng của schema \texttt{app} đều gắn với \texttt{user\dbsep{}id} (Hình 3). Số dòng đọc trực tiếp trên Neon ngày 08/11/2026:
 
@@ -648,21 +647,21 @@ Hai đường vào cùng kết thúc ở một vùng landing trên Volume, nơi 
 \begin{longtable}{@{}L{0.15\reporttablewidth} L{0.24\reporttablewidth} L{0.13\reporttablewidth} L{0.15\reporttablewidth} L{0.21\reporttablewidth} L{0.12\reporttablewidth}@{}}
 \caption[Bốn schema của database app (mục 3.3)]{Bốn schema của database app trên Neon}\label{tab:08} \\
 \toprule
-\textbf{Schema} & \textbf{Chứa gì} & \textbf{Ai ghi} & \textbf{Ai đọc} & \textbf{CDC theo dõi} & \textbf{Số bảng (08/11)} \\
+\textbf{Schema} & \textbf{Chứa gì} & \textbf{Ai ghi} & \textbf{Ai đọc} & \textbf{CDC theo dõi} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Schema} & \textbf{Chứa gì} & \textbf{Ai ghi} & \textbf{Ai đọc} & \textbf{CDC theo dõi} & \textbf{Số bảng (08/11)} \\
+\textbf{Schema} & \textbf{Nội dung} & \textbf{Thac tác ghi} & \textbf{Thac tác} & \textbf{CDC theo dõi}  \\
 \midrule
 \endhead
 \midrule
 \endfoot
 \bottomrule
 \endlastfoot
-\texttt{app} & Hành vi người dùng & Web app, simulator & Web app, Debezium & Có & 6 \\
-\texttt{serving} & Kết quả lakehouse tính sẵn & Job \texttt{cinelake\dbsep{}serving} & Web app & Không & 5 (Bảng 29) \\
-\texttt{app\dbsep{}private} & Tài khoản, mật khẩu đã biến đổi, phiên đăng nhập; thêm ba bảng riêng của web app (ảnh phim, nguồn và biên nhận sự kiện) & Web app & Web app & Không & 7 (10 tài khoản) \\
-\texttt{cdc\dbsep{}meta} & Bảng heartbeat & Debezium & Debezium & Có, chỉ để giữ kết nối & 1 \\
+\texttt{app} & Hành vi người dùng & Web app & Web app, Debezium & Có \\
+\texttt{serving} & Kết quả lakehouse tính sẵn & Job \texttt{cinelake\dbsep{}serving} & Web app & Không \\
+\texttt{app\dbsep{}private} & Tài khoản, mật khẩu đã biến đổi, phiên đăng nhập; thêm ba bảng riêng của web app (ảnh phim, nguồn và biên nhận sự kiện) & Web app & Web app & Không  \\
+\texttt{cdc\dbsep{}meta} & Bảng heartbeat & Debezium & Debezium & Có \\
 \end{longtable}
 \endgroup
 
@@ -808,11 +807,11 @@ Bronze có bốn dòng, silver luôn chỉ có một kết quả đúng; lịch 
 \begin{longtable}{@{}L{0.26\reporttablewidth} L{0.44\reporttablewidth} L{0.30\reporttablewidth}@{}}
 \caption[Các bảng fact và dimension của tầng gold (mục 3.4)]{Các bảng fact và dimension của tầng gold}\label{tab:11} \\
 \toprule
-\textbf{Bảng} & \textbf{Mỗi dòng là} & \textbf{Số dòng (08/11)} \\
+\textbf{Bảng} & \textbf{Nội dung} & \textbf{Số dòng (08/11)} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Bảng} & \textbf{Mỗi dòng là} & \textbf{Số dòng (08/11)} \\
+\textbf{Bảng} & \textbf{Nội dung} & \textbf{Số dòng (08/11)} \\
 \midrule
 \endhead
 \midrule
@@ -851,13 +850,13 @@ Các rule nằm trong file YAML của DQX (mục 3.1); mỗi rule chạy theo m�
 \renewcommand{\arraystretch}{1.18}
 \setlength{\reporttablewidth}{\dimexpr\linewidth-4\tabcolsep\relax}
 \begin{longtable}{@{}L{0.20\reporttablewidth} L{0.39\reporttablewidth} L{0.41\reporttablewidth}@{}}
-\caption[Ba chế độ kiểm soát chất lượng (mục 3.5)]{Ba chế độ kiểm soát chất lượng}\label{tab:12} \\
+\caption[Các mức độ kiểm soát chất lượng (mục 3.5)]{Các mức độ kiểm soát chất lượng}\label{tab:12} \\
 \toprule
-\textbf{Chế độ} & \textbf{Dùng cho} & \textbf{Khi vi phạm} \\
+\textbf{Chế độ} & \textbf{Áp dụng} & \textbf{Khi vi phạm} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Chế độ} & \textbf{Dùng cho} & \textbf{Khi vi phạm} \\
+\textbf{Chế độ} & \textbf{Áp dụng} & \textbf{Khi vi phạm} \\
 \midrule
 \endhead
 \midrule
@@ -940,7 +939,7 @@ Dashboard vận hành cho đội dữ liệu biết dữ liệu có đang tới 
 \label{fig:06}
 \end{figure}
 
-\textbf{Chịu lỗi.} Pipeline được thiết kế để các lỗi thường gặp chỉ làm chậm chứ không làm sai dữ liệu:
+\textbf{Xử lý lỗi.} Pipeline được thiết kế để các lỗi thường gặp không làm sai dữ liệu:
 
 \begingroup
 \small
@@ -1227,7 +1226,7 @@ Kiểm tra rating phát lại là bằng chứng mạnh nhất cho đường CDC
 
 \subsection{Hiệu năng}\label{sec:5.2}
 
-\textbf{Môi trường đo.} Databricks Free Edition (compute serverless, một SQL warehouse nhỏ nhất); Neon PostgreSQL gói miễn phí; Kafka, Debezium, sink và web app trên một mini PC chạy Docker. Thời gian lấy từ nhật ký chạy của pipeline, thời điểm ghi của Kafka, lệnh EXPLAIN ANALYZE trên Neon, và trình duyệt tự động (Playwright).
+\textbf{Môi trường đánh giá.} Databricks Free Edition (compute serverless, một SQL warehouse nhỏ nhất); Neon PostgreSQL gói miễn phí; Kafka, Debezium, sink và web app trên một mini PC chạy Docker. Thời gian lấy từ nhật ký chạy của pipeline, thời điểm ghi của Kafka, lệnh EXPLAIN ANALYZE trên Neon, và trình duyệt tự động (Playwright).
 
 \begingroup
 \small
@@ -1236,13 +1235,13 @@ Kiểm tra rating phát lại là bằng chứng mạnh nhất cho đường CDC
 \renewcommand{\arraystretch}{1.18}
 \setlength{\reporttablewidth}{\dimexpr\linewidth-4\tabcolsep\relax}
 \begin{longtable}{@{}L{0.28\reporttablewidth} L{0.35\reporttablewidth} L{0.37\reporttablewidth}@{}}
-\caption[Kết quả đo hiệu năng (mục 5.2)]{Kết quả đo hiệu năng ngày 08/11/2026}\label{tab:18} \\
+\caption[Kết quả đánh giá hiệu năng (mục 5.2)]{Kết quả đánh giá hiệu năng ngày 08/11/2026}\label{tab:18} \\
 \toprule
-\textbf{Đoạn đường} & \textbf{Đo gì} & \textbf{Kết quả ngày 08/11/2026} \\
+\textbf{Mục tiêu} & \textbf{Chi tiết đánh giá} & \textbf{Kết quả ngày 08/11/2026} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Đoạn đường} & \textbf{Đo gì} & \textbf{Kết quả ngày 08/11/2026} \\
+\textbf{Mục tiêu} & \textbf{Chi tiết đánh giá} & \textbf{Kết quả ngày 08/11/2026} \\
 \midrule
 \endhead
 \midrule
@@ -1261,7 +1260,7 @@ Dashboard & Một truy vấn trên SQL warehouse & 0,5--0,8 giây khi warehouse 
 \end{longtable}
 \endgroup
 
-\textbf{Vì sao chậm ở chỗ chậm.}
+\textbf{Những điểm làm chậm quá trình xử lý dữ liệu}
 
 \begin{itemize}
   \item \textbf{Vòng refresh tính bằng phút} chủ yếu do thời gian khởi động compute serverless cho từng job, không phải do khối lượng dữ liệu mỗi vòng.
@@ -1283,12 +1282,12 @@ Gợi ý cá nhân bằng item-item CF tốt hơn gợi ý phim phổ biến tr�
 \textbf{Cách đo.} Dữ liệu MovieLens được chia theo thời gian, không chia ngẫu nhiên: học trên mọi rating trước 30 ngày cuối, kiểm tra trên 10.966 lượt thích (rating \ensuremath{\geq} 4) trong 30 ngày cuối của 1.728 user. Chia theo thời gian tránh để mô hình \textquotedbl{}nhìn trước tương lai\textquotedbl{}. Mỗi phương án gợi ý 10 phim.
 
 \begin{itemize}
-  \item \textbf{Hit rate@10:} tỉ lệ user có ít nhất một phim trúng trong 10 gợi ý.
-  \item \textbf{Precision@10:} bao nhiêu phần gợi ý là đúng.
-  \item \textbf{Recall@10:} bao nhiêu phần phim user thật sự thích đã được gợi ý.
+  \item \textbf{Hit rate of 10:} tỉ lệ user có ít nhất một phim trúng trong 10 gợi ý.
+  \item \textbf{Precision of 10:} bao nhiêu phần gợi ý là đúng.
+  \item \textbf{Recall of 10:} bao nhiêu phần phim user thật sự thích đã được gợi ý.
 \end{itemize}
 
-Kết quả vòng đánh giá ngày 08/11/2026 (Hình 21): hit rate@10 của CF là 20,43\% so với 17,19\% của phim phổ biến, precision@10 là 3,30\% so với 2,63\%, recall@10 là 5,21\% so với 4,15\%; tính tương đối, CF hơn 19--26\% trên cả ba chỉ số. Chênh lệch không lớn vì phim phổ biến vốn là baseline mạnh trên MovieLens, nhưng CF còn giải thích được lý do gợi ý cho từng người.
+Kết quả vòng đánh giá ngày 08/11/2026 (Hình 21): Hit rate of 10 của CF là 20,43\% so với 17,19\% của phim phổ biến, Precision of 10 là 3,30\% so với 2,63\%, Recall of 10 là 5,21\% so với 4,15\%; tính tương đối, CF hơn 19--26\% trên cả ba chỉ số. Chênh lệch không lớn vì phim phổ biến vốn là baseline mạnh trên MovieLens, nhưng CF còn giải thích được lý do gợi ý cho từng người.
 
 \begin{figure}[H]
 \centering
@@ -1387,7 +1386,7 @@ Dashboard & Databricks AI/BI & Apache Superset trên Trino \\
 \endgroup
 
 \begin{quote}
-\textbf{Rủi ro hệ sinh thái nhóm gặp thật.} Khi dựng thử stack này, MinIO đã ngừng phát hành Docker image cộng đồng. Nhóm thử SeaweedFS thay thế nhưng nó không tương thích với Delta, nên cuối cùng phải dùng một bản lưu trữ cũ của MinIO. Với nền tảng có sẵn, loại sự cố này do nhà cung cấp xử lý.
+\textbf{Rủi ro hệ sinh thái.} Khi dựng thử stack này, MinIO đã ngừng phát hành Docker image cộng đồng. Nhóm thử SeaweedFS thay thế nhưng nó không tương thích với Delta, nên cuối cùng phải dùng một bản lưu trữ cũ của MinIO. Với nền tảng có sẵn, loại sự cố này do nhà cung cấp xử lý.
 \end{quote}
 
 Databricks Free Edition đáp ứng tốt 6 trên 9 tiêu chí; điểm yếu chính là quota theo ngày. Bảng dưới định nghĩa từng tiêu chí, ghi kết quả đo trên CineLake ngày 08/11/2026, và đặt cạnh stack mã nguồn mở tự vận hành ở trên và Databricks trả phí. Cột trả phí tách giới hạn của nền tảng khỏi giới hạn của gói miễn phí.
@@ -1600,8 +1599,8 @@ Medallion & Kiến trúc ba tầng bronze, silver, gold \\
 Reverse ETL & Chép kết quả từ kho phân tích về database của ứng dụng \\
 Idempotent & Chạy lại nhiều lần vẫn ra cùng kết quả \\
 Write-audit-publish & Ghi, kiểm tra, rồi mới công bố dữ liệu \\
-Accumulating snapshot & Bảng fact mỗi dòng là một quá trình, cập nhật dần khi các mốc xảy ra \\
-Hit rate@10 & Tỉ lệ user có ít nhất một phim trúng trong 10 gợi ý \\
+Accumulating snapshot & Bảng fact mỗi dòng là một quá trình, được cập nhật dần khi các mốc xảy ra \\
+Hit rate of 10 & Tỉ lệ user có ít nhất một phim trúng trong 10 gợi ý \\
 Quarantine & Tách dòng dữ liệu sai sang một bảng riêng, dòng đúng đi tiếp \\
 Record linkage & Ghép các bản ghi của cùng một đối tượng (ở đây là một phim) từ nhiều nguồn khác nhau \\
 Mart & Bảng tổng hợp sẵn cho một câu hỏi hoặc một nhóm người dùng, đọc từ các bảng fact \\
@@ -1791,11 +1790,11 @@ Phụ lục này liệt kê các bảng của ba tầng bronze, silver, gold, c�
 \begin{longtable}{@{}L{0.24\reporttablewidth} L{0.34\reporttablewidth} L{0.26\reporttablewidth} L{0.16\reporttablewidth}@{}}
 \caption[Các bảng vận hành và chất lượng dữ liệu (Phụ lục E)]{Các bảng vận hành và chất lượng dữ liệu}\label{tab:30} \\
 \toprule
-\textbf{Bảng} & \textbf{Mỗi dòng là} & \textbf{Dùng cho} & \textbf{Số dòng (08/11)} \\
+\textbf{Bảng} & \textbf{Mỗi dòng là} & \textbf{Áp dụng} & \textbf{Số dòng (08/11)} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Bảng} & \textbf{Mỗi dòng là} & \textbf{Dùng cho} & \textbf{Số dòng (08/11)} \\
+\textbf{Bảng} & \textbf{Mỗi dòng là} & \textbf{Áp dụng} & \textbf{Số dòng (08/11)} \\
 \midrule
 \endhead
 \midrule
