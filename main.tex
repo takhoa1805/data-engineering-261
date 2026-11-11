@@ -208,9 +208,9 @@ Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check
 
 \subsection{Bối cảnh}\label{sec:1.1}
 
-Một nền tảng phim giúp người xem tìm được phim hợp gu, xem trọn vẹn và quay lại. Để làm được việc đó, cùng một nguồn dữ liệu phải được sử dụng ở hai nơi: người xem cần gợi ý ngay trên app, còn các internal teams (các bộ phận nội bộ ) cần số liệu để quyết định. Nhóm lấy cảm hứng từ cách Netflix tách xử lý dữ liệu thành tầng offline (tính trước) và tầng online (tính ngay lúc người dùng hỏi), rồi xây một phiên bản thu nhỏ chạy được trên hạ tầng miễn phí.
-
-Trong đồ án này, nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Trên dòng thời gian được dịch chuyển từ dữ liệu MovieLens, nhóm chọn ngày 28/12/2025 làm mốc giả định CineLake bắt đầu hoạt động trong kịch bản tái dựng. Mốc này phân chia dữ liệu lịch sử được nạp theo đợt và dữ liệu được phát lại qua ứng dụng (mục~\ref{sec:2.3}). Ứng dụng hỗ trợ xem phim, chấm điểm, tìm kiếm, lưu phim vào Danh sách ưa thích và gửi phản hồi. Trọng tâm của đồ án là đưa dữ liệu từ các nguồn bên ngoài và cơ sở dữ liệu của ứng dụng vào lakehouse để làm sạch, mô hình hoá và kiểm soát chất lượng, rồi đưa kết quả trở lại ứng dụng và cung cấp số liệu cho dashboard.
+Trong lĩnh vực giải trí, cụ thể là về phim ảnh, một nền tảng xem phim giúp người xem tìm được phim hợp gu, xem trọn vẹn thì sẽ có khả năng thu hút được người dùng. Để làm được việc đó, những nhà phát triển cần phục vụ cùng một nguồn dữ liệu ở hai nơi: thứ nhất, người xem cần gợi ý ngay trên ứng dụng; thứ hai, các đội ngũ nội bộ (internal teams) cần số liệu để vận hành và đưa ra quyết định nhằm cải thiện trải nghiệm người dùng.
+\newline
+Trong đề tài này, nhóm lấy cảm hứng từ cách Netflix đã giải quyết nhiều bài toán khác nhau để trở thành một trong những nền tảng xem phim trực tuyến lớn nhất lịch sử. Nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Nhóm chọn mốc 28/12/2025 trên dòng thời gian MovieLens để phân định dữ liệu lịch sử nạp theo đợt và dữ liệu phát lại qua ứng dụng (mục~\ref{sec:2.3}). Trọng tâm của đồ án là thu thập dữ liệu từ ứng dụng và các nguồn ngoài vào Lakehouse để làm sạch, mô hình hoá và kiểm định chất lượng, phục vụ cho cả tính năng người dùng lẫn dashboard báo cáo.
 
 \subsection{Yêu cầu nghiệp vụ}\label{sec:1.2}
 
@@ -306,11 +306,11 @@ Phạm vi của nhóm, bao gồm 04 người, có tất cả 08 yêu cầu nghi�
 \begin{longtable}{@{}L{0.07\reporttablewidth} L{0.14\reporttablewidth} L{0.29\reporttablewidth} L{0.09\reporttablewidth} L{0.27\reporttablewidth} L{0.14\reporttablewidth}@{}}
 \caption[Tám yêu cầu nghiệp vụ và thách thức dữ liệu (mục 2.2)]{Tám yêu cầu nghiệp vụ và thách thức dữ liệu}\label{tab:03} \\
 \toprule
-\textbf{BR} & \textbf{Người dùng} & \textbf{Nhu cầu dữ liệu} & \textbf{Mục tiêu} & \textbf{Thách thức dữ liệu} & \textbf{Dữ liệu} \\
+\textbf{BR} & \textbf{Người dùng} & \textbf{Yêu cầu từ dữ liệu} & \textbf{Mục tiêu} & \textbf{Thách thức} & \textbf{Dữ liệu} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{BR} & \textbf{Người dùng} & \textbf{Nhu cầu dữ liệu} & \textbf{Mục tiêu} & \textbf{Thách thức dữ liệu} & \textbf{Dữ liệu} \\
+\textbf{BR} & \textbf{Người dùng} & \textbf{Yêu cầu từ dữ liệu} & \textbf{Mục tiêu} & \textbf{Thách thức} & \textbf{Dữ liệu} \\
 \midrule
 \endhead
 \midrule
