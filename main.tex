@@ -208,9 +208,9 @@ Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check
 
 \subsection{Bối cảnh}\label{sec:1.1}
 
-Một nền tảng phim sống nhờ người xem tìm được phim hợp gu, xem trọn vẹn và quay lại. Để làm được việc đó, cùng một nguồn dữ liệu phải phục vụ hai nơi: người xem cần gợi ý ngay trên app, còn các internal teams (các bộ phận nội bộ ) cần số liệu để quyết định. Nhóm lấy cảm hứng từ cách Netflix tách xử lý dữ liệu thành tầng offline (tính trước) và tầng online (tính ngay lúc người dùng hỏi), rồi xây một phiên bản thu nhỏ chạy được trên hạ tầng miễn phí.
+Một nền tảng phim giúp người xem tìm được phim hợp gu, xem trọn vẹn và quay lại. Để làm được việc đó, cùng một nguồn dữ liệu phải được sử dụng ở hai nơi: người xem cần gợi ý ngay trên app, còn các internal teams (các bộ phận nội bộ ) cần số liệu để quyết định. Nhóm lấy cảm hứng từ cách Netflix tách xử lý dữ liệu thành tầng offline (tính trước) và tầng online (tính ngay lúc người dùng hỏi), rồi xây một phiên bản thu nhỏ chạy được trên hạ tầng miễn phí.
 
-Trong đồ án này, nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Trên dòng thời gian được dịch chuyển từ dữ liệu MovieLens, nhóm chọn ngày 28/12/2025 làm mốc giả định CineLake bắt đầu hoạt động trong kịch bản tái dựng. Mốc này phân chia dữ liệu lịch sử được nạp theo đợt và dữ liệu được phát lại qua ứng dụng (mục~\ref{sec:2.3}). Ứng dụng hỗ trợ xem phim, chấm điểm, tìm kiếm, lưu phim vào Danh sách ưa thích (\textit{Danh sách yêu thích}) và gửi phản hồi. Trọng tâm của đồ án là đưa dữ liệu từ các nguồn bên ngoài và cơ sở dữ liệu của ứng dụng vào lakehouse để làm sạch, mô hình hoá và kiểm soát chất lượng, rồi đưa kết quả trở lại ứng dụng và cung cấp số liệu cho dashboard.
+Trong đồ án này, nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Trên dòng thời gian được dịch chuyển từ dữ liệu MovieLens, nhóm chọn ngày 28/12/2025 làm mốc giả định CineLake bắt đầu hoạt động trong kịch bản tái dựng. Mốc này phân chia dữ liệu lịch sử được nạp theo đợt và dữ liệu được phát lại qua ứng dụng (mục~\ref{sec:2.3}). Ứng dụng hỗ trợ xem phim, chấm điểm, tìm kiếm, lưu phim vào Danh sách ưa thích và gửi phản hồi. Trọng tâm của đồ án là đưa dữ liệu từ các nguồn bên ngoài và cơ sở dữ liệu của ứng dụng vào lakehouse để làm sạch, mô hình hoá và kiểm soát chất lượng, rồi đưa kết quả trở lại ứng dụng và cung cấp số liệu cho dashboard.
 
 \subsection{Yêu cầu nghiệp vụ}\label{sec:1.2}
 
@@ -245,10 +245,10 @@ O4 & Trải nghiệm xem ổn định & Thời gian chờ phát, tỉ lệ lỗi
 
 \subsection{Phạm vi và đóng góp}\label{sec:1.3}
 
-Nhóm xây dựng và vận hành thật một hệ thống hoàn chỉnh, không dừng ở bản thiết kế:
+Nhóm xây dựng và vận hành một hệ thống hoàn chỉnh, dựa trên ý tưởng của ứng dụng thực tế là \textbf{Netflix}.
 
 \begin{itemize}
-  \item \textbf{Thu thập hai chiều:} kéo dữ liệu từ nguồn ngoài theo đợt, và đẩy mọi thay đổi của app vào lakehouse liên tục bằng CDC.
+  \item \textbf{Thu thập hai chiều:} kéo dữ liệu từ nguồn ngoài theo batch, và đẩy mọi thay đổi của app vào lakehouse liên tục bằng kỹ thuật CDC.
   \item \textbf{Lakehouse có kiểm soát chất lượng:} ba tầng dữ liệu và 45 DQ check phủ 6 chiều chất lượng; dữ liệu sai bị chặn trước khi tới người dùng.
   \item \textbf{Vòng phản hồi khép kín:} kết quả của lakehouse quay về app, và hành động mới trên app lại đi vào lakehouse.
   \item \textbf{8 BR có số liệu:} 3 BR trên web app, 5 BR trên dashboard.
@@ -272,11 +272,11 @@ Dữ liệu của CineLake được dùng ở hai nơi: web app cho người xem
 \begin{longtable}{@{}L{0.16\reporttablewidth} L{0.28\reporttablewidth} L{0.16\reporttablewidth} L{0.40\reporttablewidth}@{}}
 \caption[Nhóm người dùng dữ liệu (mục 2.1)]{Nhóm người dùng dữ liệu}\label{tab:02} \\
 \toprule
-\textbf{Nhóm} & \textbf{Ai} & \textbf{Dùng ở đâu} & \textbf{Cần gì từ dữ liệu} \\
+\textbf{Nhóm} & \textbf{Đối tượng} & \textbf{Ứng dụng} & \textbf{Thông tin cần từ dữ liệu} \\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Nhóm} & \textbf{Ai} & \textbf{Dùng ở đâu} & \textbf{Cần gì từ dữ liệu} \\
+\textbf{Nhóm} & \textbf{Đối tượng} & \textbf{Ứng dụng} & \textbf{Thông tin cần từ dữ liệu} \\
 \midrule
 \endhead
 \midrule
@@ -1811,4 +1811,4 @@ Phụ lục này liệt kê các bảng của ba tầng bronze, silver, gold, c�
 \end{longtable}
 \endgroup
 
-\end{document}
+\end{document} 
