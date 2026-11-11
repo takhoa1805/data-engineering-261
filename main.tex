@@ -210,11 +210,11 @@ Kết quả đo ngày 08/11/2026 trên hệ thống đang chạy: 45/45 DQ check
 
 Trong lĩnh vực giải trí, cụ thể là về phim ảnh, một nền tảng xem phim giúp người xem tìm được phim hợp gu, xem trọn vẹn thì sẽ có khả năng thu hút được người dùng. Để làm được việc đó, những nhà phát triển cần phục vụ cùng một nguồn dữ liệu ở hai nơi: thứ nhất, người xem cần gợi ý ngay trên ứng dụng; thứ hai, các đội ngũ nội bộ (internal teams) cần số liệu để vận hành và đưa ra quyết định nhằm cải thiện trải nghiệm người dùng.
 \newline
-Trong đề tài này, nhóm lấy cảm hứng từ cách Netflix đã giải quyết nhiều bài toán khác nhau để trở thành một trong những nền tảng xem phim trực tuyến lớn nhất lịch sử. Nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Nhóm chọn mốc 28/12/2025 trên dòng thời gian MovieLens để phân định dữ liệu lịch sử nạp theo đợt và dữ liệu phát lại qua ứng dụng (mục~\ref{sec:2.3}). Trọng tâm của đồ án là thu thập dữ liệu từ ứng dụng và các nguồn ngoài vào Lakehouse để làm sạch, mô hình hoá và kiểm định chất lượng, phục vụ cho cả tính năng người dùng lẫn dashboard báo cáo.
+Trong đề tài này, nhóm lấy cảm hứng từ cách Netflix đã giải quyết nhiều bài toán khác nhau để trở thành một trong những nền tảng xem phim trực tuyến lớn nhất lịch sử. Nhóm xây dựng CineLake để tái hiện một nền tảng xem, chấm điểm và khám phá phim từ các tập dữ liệu có sẵn, trong đó MovieLens cung cấp lịch sử chấm điểm thực tế của người dùng. Nhóm chọn mốc 28/12/2025 trên dòng thời gian của dataset MovieLens để phân tích dữ liệu. Trọng tâm của đồ án là thu thập dữ liệu từ ứng dụng và các nguồn ngoài vào Lakehouse để làm sạch, mô hình hoá và kiểm định chất lượng, phục vụ cho cả tính năng người dùng lẫn dashboard báo cáo.
 
 \subsection{Yêu cầu nghiệp vụ}\label{sec:1.2}
 
-Bảng dưới nêu ra các tiêu chí, quyết định hệ thống đo đạc những gì.
+Bảng~\ref{tab:01} tổng hợp các mục tiêu nghiệp vụ chính và các thước đo tương ứng mà hệ thống cần theo dõi.
 
 \begingroup
 \small
@@ -248,7 +248,7 @@ O4 & Trải nghiệm xem ổn định & Thời gian chờ phát, tỉ lệ lỗi
 Nhóm xây dựng và vận hành một hệ thống hoàn chỉnh, dựa trên ý tưởng của ứng dụng thực tế là \textbf{Netflix}.
 
 \begin{itemize}
-  \item \textbf{Thu thập hai chiều:} kéo dữ liệu từ nguồn ngoài theo batch, và đẩy mọi thay đổi của app vào lakehouse liên tục bằng kỹ thuật CDC.
+  \item \textbf{Thu thập hai chiều:} kéo dữ liệu từ nguồn theo đợt, và đẩy mọi thay đổi của app vào lakehouse liên tục bằng kỹ thuật CDC.
   \item \textbf{Lakehouse có kiểm soát chất lượng:} ba tầng dữ liệu và 45 DQ check phủ 6 chiều chất lượng; dữ liệu sai bị chặn trước khi tới người dùng.
   \item \textbf{Vòng phản hồi khép kín:} kết quả của lakehouse quay về app, và hành động mới trên app lại đi vào lakehouse.
   \item \textbf{8 BR có số liệu:} 3 BR trên web app, 5 BR trên dashboard.
@@ -317,22 +317,20 @@ Phạm vi của nhóm, bao gồm 04 người, có tất cả 08 yêu cầu nghi�
 \endfoot
 \bottomrule
 \endlastfoot
-BR1 & Viewers & Người xem cần danh sách gợi ý cá nhân kèm lý do, đổi ngay sau hành động mới nhất, để tìm được phim hợp gu & O1 & Kết hợp lịch sử đánh giá với hành động mới nhất của người dùng & Thật \\
-BR2 & Viewers & Người xem cần biết phim nào được nhiều người khác nhau chấm hoặc xem nhất trong tuần, để chọn phim đang được chú ý & O1 & Gộp các loại hành động của người dùng trong một khoảng thời gian ngắn & Thật tới 09/10/2026, sau đó mô phỏng \\
-BR3 & Viewers & Người xem cần danh sách phim tương tự một phim mình thích, kể cả phim ít người chấm, để tiếp tục khám phá & O1 & Kết hợp thông tin phim từ nhiều nguồn để cả phim ít người chấm vẫn có dữ liệu so sánh & Thật \\
-BR4 & Product & Đội sản phẩm cần biết discovery channel nào dẫn tới xem phim nhiều nhất, để đầu tư đúng kênh & O1 & Nối lượt mở trang phim với lượt xem sau đó, và phân biệt mở để khám phá với mở chỉ để chấm & Mô phỏng \\
-BR5 & Marketing & Marketing cần theo dõi mức độ giữ chân người dùng theo tháng, để chủ động giữ và kéo lại user & O2 & Dựng lịch sử hoạt động theo tháng của từng người dùng từ nhiều loại hành động & Thật tới 09/10/2026, sau đó mô phỏng \\
-BR6 & Platform & Platform cần giám sát chất lượng phát, để ưu tiên sửa đúng thiết bị và phiên bản player & O4 & Ghép sự kiện phát với phàn nàn của người dùng theo thiết bị và phiên bản & Mô phỏng \\
-BR7 & Content & Đội nội dung cần danh sách phim người dùng tìm mà catalog chưa có, xếp theo số người tìm, để quyết định mua nội dung & O3 & Đối chiếu nội dung người dùng tìm với danh mục phim hiện có & Mô phỏng \\
-BR8 & Marketing & Marketing cần theo dõi hiệu quả của Danh sách yêu thích, để nhắc đúng những phim người dùng đã lưu mà chưa xem & O1, O2 & Theo dõi vòng đời của từng lần lưu phim, kể cả lần bỏ khỏi Danh sách yêu thích, vốn không còn dấu vết trong dữ liệu hiện tại của app & Mô phỏng \\
+BR1 & Viewers & Gợi ý cá nhân hóa kèm lý do, cập nhật ngay sau tương tác mới & O1 & Kết hợp lịch sử đánh giá với tương tác tức thời & Thật \\
+BR2 & Viewers & Top phim thịnh hành (nhiều lượt xem/chấm nhất trong tuần) & O1 & Tổng hợp đa hành động theo cửa sổ thời gian ngắn & Thật \& Mô phỏng \\
+BR3 & Viewers & Danh sách phim tương tự, bao phủ cả phim ít lượt đánh giá & O1 & Hợp nhất metadata đa nguồn để so sánh nội dung & Thật \\
+BR4 & Product & Đánh giá kênh khám phá (discovery channel) dẫn tới lượt xem & O1 & Ghép chuỗi sự kiện từ mở trang đến xem phim & Mô phỏng \\
+BR5 & Marketing & Tỷ lệ giữ chân người dùng (retention) theo từng tháng & O2 & Xây dựng lịch sử hoạt động tháng từ đa nguồn tương tác & Thật \& Mô phỏng \\
+BR6 & Platform & Giám sát chất lượng phát (QoS) theo thiết bị và phiên bản app & O4 & Ghép sự kiện phát video với phản hồi/khiếu nại & Mô phỏng \\
+BR7 & Content & Danh sách phim được tìm kiếm nhiều nhưng catalog chưa có & O3 & Đối chiếu từ khóa tìm kiếm với danh mục catalog & Mô phỏng \\
+BR8 & Marketing & Hiệu quả Danh sách yêu thích và tỷ lệ xem phim đã lưu & O1, O2 & Truy vết lịch sử lưu/bỏ lưu qua log CDC & Mô phỏng \\
 \end{longtable}
 \endgroup
 
-Cột Dữ liệu cho biết kết quả của BR dựa trên dữ liệu thật hay mô phỏng (mục 2.3). Các câu hỏi quản trị mà dashboard trả lời đều quy về BR4--BR8; riêng trang Overview chỉ tổng hợp chỉ số chung của nền tảng, không tính là BR.
-
 \subsection{Nguồn dữ liệu}\label{sec:2.3}
 
-Bốn nguồn, và nguồn nào cũng được Áp dụng ít nhất một BR:
+Bốn nguồn, và nguồn nào cũng được áp dụng ít nhất một BR:
 
 \begingroup
 \small
