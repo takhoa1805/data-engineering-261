@@ -243,18 +243,6 @@ O4 & Trải nghiệm xem ổn định & Thời gian chờ phát, tỉ lệ lỗi
 \end{longtable}
 \endgroup
 
-\subsection{Phạm vi và đóng góp}\label{sec:1.3}
-
-Nhóm xây dựng và vận hành một hệ thống hoàn chỉnh, dựa trên ý tưởng của ứng dụng thực tế là \textbf{Netflix}.
-
-\begin{itemize}
-  \item \textbf{Thu thập hai chiều:} kéo dữ liệu từ nguồn theo đợt, và đẩy mọi thay đổi của app vào lakehouse liên tục bằng kỹ thuật CDC.
-  \item \textbf{Lakehouse có kiểm soát chất lượng:} ba tầng dữ liệu và 45 DQ check phủ 6 chiều chất lượng; dữ liệu sai bị chặn trước khi tới người dùng.
-  \item \textbf{Vòng phản hồi khép kín:} kết quả của lakehouse quay về app, và hành động mới trên app lại đi vào lakehouse.
-  \item \textbf{8 BR có số liệu:} 3 BR trên web app, 5 BR trên dashboard.
-  \item \textbf{Kiểm thử:} 83 unit test chạy trên bảng Delta thật, cùng một code với Databricks.
-\end{itemize}
-
 Ngoài phạm vi: thanh toán và dữ liệu xem phim thật (MovieLens không có; phần này được mô phỏng, mục 2.3).
 
 \section{Người dùng, yêu cầu nghiệp vụ và dữ liệu}\label{sec:2}
@@ -262,34 +250,6 @@ Ngoài phạm vi: thanh toán và dữ liệu xem phim thật (MovieLens không 
 \subsection{Người dùng dữ liệu}\label{sec:2.1}
 
 Dữ liệu của CineLake được dùng ở hai nơi: web app cho người xem, và dashboard Databricks cho các các bộ phận nội bộ.
-
-\begingroup
-\small
-\setstretch{1.12}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.18}
-\setlength{\reporttablewidth}{\dimexpr\linewidth-6\tabcolsep\relax}
-\begin{longtable}{@{}L{0.16\reporttablewidth} L{0.28\reporttablewidth} L{0.16\reporttablewidth} L{0.40\reporttablewidth}@{}}
-\caption[Nhóm người dùng dữ liệu (mục 2.1)]{Nhóm người dùng dữ liệu}\label{tab:02} \\
-\toprule
-\textbf{Nhóm} & \textbf{Đối tượng} & \textbf{Ứng dụng} & \textbf{Thông tin cần từ dữ liệu} \\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Nhóm} & \textbf{Đối tượng} & \textbf{Ứng dụng} & \textbf{Thông tin cần từ dữ liệu} \\
-\midrule
-\endhead
-\midrule
-\endfoot
-\bottomrule
-\endlastfoot
-Viewers & Người xem & Web app & Biết nên xem gì tiếp, phim nào đang được chú ý, phim nào giống phim mình thích \\
-Product & Đội sản phẩm & Dashboard & Discovery channel nào (tìm kiếm, gợi ý, trending, phim tương tự, Danh sách yêu thích) đưa người xem tới xem phim \\
-Marketing và CRM & Marketing, chăm sóc khách hàng & Dashboard & Tỉ lệ giữ chân theo tháng, danh sách user cần kéo lại, phim đã lưu mà chưa xem \\
-Content & Đội tìm kiếm và sản xuất nội dung & Dashboard & Phim người dùng tìm mà catalog chưa có \\
-Platform & Đội phát triển phần mềm và hạ tầng & Dashboard & Thiết bị, phiên bản player nào phát kém, người dùng phàn nàn gì \\
-\end{longtable}
-\endgroup
 
 Ngoài ra, đội dữ liệu dùng một dashboard vận hành riêng (CDC, pipeline, chất lượng dữ liệu) để theo dõi hệ thống; dashboard này phục vụ phần đánh giá ở mục 5, không tính là BR.
 
@@ -405,7 +365,7 @@ Rating ghi qua app (ngoài phần phát lại) & 71.825 & 21.702 & 8 \\
 \end{longtable}
 \endgroup
 
-Pipeline xử lý dữ liệu mô phỏng y hệt dữ liệu thật (cùng đường CDC, cùng DQ check), nên các chỉ số tổng trên dashboard là số của toàn bộ bộ dữ liệu dự án. Vì vậy kết quả BR cần đọc theo cột Dữ liệu của Bảng 3: BR1 và BR3 đo trên rating thật; BR2 và BR5 cần đọc thận trọng phần sau 09/10/2026; BR4, BR6, BR7, BR8 chứng minh pipeline đo được, chưa phải kết luận kinh doanh.
+Pipeline xử lý dữ liệu mô phỏng y hệt dữ liệu thật (cùng đường CDC, cùng DQ check), nên các chỉ số tổng trên dashboard là số của toàn bộ bộ dữ liệu dự án. Vì vậy kết quả BR cần đọc theo cột Dữ liệu của Bảng~\ref{tab:03}: BR1 và BR3 đo trên rating thật; BR2 và BR5 cần đọc thận trọng phần sau 09/10/2026; BR4, BR6, BR7, BR8 chứng minh pipeline đo được, chưa phải kết luận kinh doanh.
 
 \subsection{Đặc tính dữ liệu và thách thức}\label{sec:2.4}
 
@@ -628,7 +588,7 @@ Mỗi thay đổi trên app đi qua bốn chặng. \\
 \end{figure}
 
 
-\textbf{Database của app trên Neon.} Database chia thành bốn schema, và chỉ schema \texttt{app} được CDC theo dõi (Bảng 8). Sáu bảng của schema \texttt{app} đều gắn với \texttt{user\dbsep{}id} (Hình 3). Số dòng đọc trực tiếp trên Neon ngày 08/11/2026:
+\textbf{Database của app trên Neon.} Database chia thành bốn schema, và chỉ schema \texttt{app} được CDC theo dõi (Bảng~\ref{tab:08}). Sáu bảng của schema \texttt{app} đều gắn với \texttt{user\dbsep{}id} (Hình 3). Số dòng đọc trực tiếp trên Neon ngày 08/11/2026:
 
 \begin{itemize}
   \item \texttt{users} : 10.323, gồm 8.846 user MovieLens, 1.467 user do simulator tạo và 10 tài khoản app;
@@ -673,7 +633,7 @@ Mỗi thay đổi trên app đi qua bốn chặng. \\
 
 \subsection{Lakehouse: ba tầng bronze, silver, gold}\label{sec:3.4}
 
-Lakehouse của CineLake theo kiến trúc medallion: dữ liệu đi qua ba tầng, mỗi tầng sạch hơn và gần nhu cầu kinh doanh hơn tầng trước. Bảng 9 tóm tắt vai trò từng tầng; các tiểu mục dưới đây nói rõ mỗi tầng chứa gì và được xử lý ra sao.
+Lakehouse của CineLake theo kiến trúc medallion: dữ liệu đi qua ba tầng, mỗi tầng sạch hơn và gần nhu cầu kinh doanh hơn tầng trước. Bảng~\ref{tab:09} tóm tắt vai trò từng tầng; các tiểu mục dưới đây nói rõ mỗi tầng chứa gì và được xử lý ra sao.
 
 \begingroup
 \small
@@ -716,7 +676,7 @@ Tầng này có 11 bảng, 233,1 triệu dòng, chia theo nguồn:
   \item \textbf{Database của app (1 bảng):} \texttt{app\dbsep{}cdc\dbsep{}changes} chứa thay đổi của cả 6 bảng app, khoảng 5,6 triệu dòng. Gom chung một bảng để giữ được thứ tự LSN giữa các bảng. Các cột tên bảng, loại thay đổi, LSN, thời điểm nguồn và cờ xoá được tách ra; dòng JSON gốc giữ ở cột \texttt{payload} .
 \end{itemize}
 
-Bronze được nạp bằng Auto Loader như mô tả ở mục 3.1: phần CDC chạy mỗi vòng, phần nguồn ngoài chỉ chạy trong job daily và job khởi tạo. Danh sách đầy đủ ở Phụ lục E (Bảng 26).
+Bronze được nạp bằng Auto Loader như mô tả ở mục 3.1: phần CDC chạy mỗi vòng, phần nguồn ngoài chỉ chạy trong job daily và job khởi tạo. Danh sách đầy đủ ở Phụ lục E (Bảng~\ref{tab:26}).
 
 \subsubsection*{Silver: làm sạch và chuẩn hoá}
 
@@ -729,7 +689,7 @@ Tầng này có 14 bảng, thuộc hai nhóm xử lý khác nhau:
   \item \textbf{Dữ liệu từ app (9 bảng, 202.425 user, 32.002.850 rating):} gồm trạng thái hiện tại (user, rating, tag, Danh sách yêu thích, tìm kiếm, sự kiện), lịch sử từng lần đổi rating và Danh sách yêu thích (phục vụ kiểm tra và BR8) và một bảng quarantine chứa thay đổi lỗi. Nhóm này cập nhật mỗi vòng bằng MERGE.
 \end{itemize}
 
-Hình 4 cho thấy hai cụm thực thể của silver: danh mục phim nối nhau qua \texttt{movie\dbsep{}id} (mã TMDB), còn các bảng dữ liệu từ app nối với nhau qua \texttt{user\dbsep{}id} và \texttt{movie\dbsep{}id} . Danh sách bảng kèm số dòng ở Phụ lục E (Bảng 27).
+Hình 4 cho thấy hai cụm thực thể của silver: danh mục phim nối nhau qua \texttt{movie\dbsep{}id} (mã TMDB), còn các bảng dữ liệu từ app nối với nhau qua \texttt{user\dbsep{}id} và \texttt{movie\dbsep{}id} . Danh sách bảng kèm số dòng ở Phụ lục E (Bảng~\ref{tab:27}).
 
 \begin{figure}[H]
 \centering
@@ -786,7 +746,7 @@ Bronze có bốn dòng, silver luôn chỉ có một kết quả đúng; lịch 
 
 \textbf{Accumulating snapshot.} Hai fact xem phim và lưu phim dùng dạng này: mỗi lượt xem hay mỗi lần lưu là một dòng, được cập nhật dần khi các mốc tiếp theo xảy ra (xem hết; được xem, được chấm, bị bỏ), dựa theo yêu cầu của BR6 và BR8.
 
-\textbf{Mart.} Mỗi BR trên dashboard có mart riêng, tính sẵn theo một mức cố định và chỉ đọc bảng gold: các fact, thêm dimension hoặc \texttt{mart\dbsep{}movie\dbsep{}catalog} khi cần thông tin phim hay user. Gold có 21 bảng: 3 dimension, 7 fact, 9 mart và 2 bảng gợi ý (Hình 5). Các fact được mô tả ở Bảng 11 bên dưới, mart và bảng gợi ý ở Phụ lục E (Bảng 28).
+\textbf{Mart.} Mỗi BR trên dashboard có mart riêng, tính sẵn theo một mức cố định và chỉ đọc bảng gold: các fact, thêm dimension hoặc \texttt{mart\dbsep{}movie\dbsep{}catalog} khi cần thông tin phim hay user. Gold có 21 bảng: 3 dimension, 7 fact, 9 mart và 2 bảng gợi ý (Hình 5). Các fact được mô tả ở Bảng~\ref{tab:11} bên dưới, mart và bảng gợi ý ở Phụ lục E (Bảng~\ref{tab:28}).
 
 \begin{figure}[H]
 \centering
@@ -953,7 +913,7 @@ Dashboard vận hành cho đội dữ liệu biết dữ liệu có đang tới 
 \endfoot
 \bottomrule
 \endlastfoot
-Sink dừng giữa chừng, lần sau gửi lại một đoạn tin & MERGE theo LSN bỏ bản cũ, không đếm trùng (Bảng 10) \\
+Sink dừng giữa chừng, lần sau gửi lại một đoạn tin & MERGE theo LSN bỏ bản cũ, không đếm trùng (Bảng~\ref{tab:10}) \\
 Debezium lỗi khi mất mạng tới database & Sink kiểm tra connector Debezium mỗi 60 giây và tự khởi động lại task bị lỗi; Neon giữ WAL nên không mất thay đổi \\
 File đến lúc job đang chạy & Không chạy chồng; vòng sau xử lý, không mất file \\
 Một DQ check mức error không đạt & Job dừng trước bước serving; web app giữ kết quả đúng gần nhất \\
@@ -1293,7 +1253,7 @@ Một DQ check chặn pipeline nếu CF không còn tốt hơn phương án ph�
 
 \subsection{Hiệu quả hỗ trợ khai thác dữ liệu qua ứng dụng}\label{sec:5.4}
 
-Cả 8 BR đều được ứng dụng trả lời đúng trên hệ thống thật: trên web trong 1,4--4,9 giây, trên dashboard trong 0,5--0,8 giây khi warehouse đang chạy. Một hành động mới trên web xuất hiện trên dashboard sau một vòng cập nhật (7,6 phút).
+Cả 8 BR đều được ứng dụng trả lời đúng trên hệ thống thật: trên web trong 1,4--4,9 giây, trên dashboard trong 0,5--0,8 giây khi warehouse đang chạy.
 
 \textbf{Cách đánh giá.} Mỗi BR thành một kịch bản có điều kiện \textquotedbl{}đạt\textquotedbl{} rõ ràng, chạy tự động ngày 08/11/2026: trình duyệt tự động (Playwright) thao tác trên web bằng một tài khoản mới; kết quả trên dashboard được kiểm bằng truy vấn trên đúng các bảng gold mà dashboard đọc. Kết quả có số và ảnh của từng BR nằm ở mục 4.2 (Hình 9--17).
 
@@ -1425,7 +1385,7 @@ Rủi ro hệ sinh thái & Rủi ro một thành phần ngừng hỗ trợ; đo 
 
 \subsection{Kết quả đạt được}\label{sec:6.1}
 
-Nhóm đã xây và vận hành thật một hệ thống dữ liệu khép kín: dữ liệu từ bốn nguồn vào lakehouse, qua ba tầng và 45 DQ check, rồi quay về web app và hai dashboard. Cả 8 BR được demo thành công kèm kết quả có số, đủ để mỗi đội ra một quyết định cụ thể.
+Cả 8 BR được demo thành công kèm kết quả có số, đủ để mỗi đội ra một quyết định cụ thể.
 
 \begingroup
 \small
@@ -1458,7 +1418,6 @@ O4 Trải nghiệm xem & BR6 & Mobile 4.0.7 lỗi 2,8\% và 72,7 phàn nàn trê
 
 \begin{itemize}
   \item \textbf{Hiểu cách dữ liệu sinh ra quan trọng ngang cách tính.} BR4 sẽ cho kết luận sai nếu không tách lượt mở trang để chấm phim đã xem khỏi lượt khám phá.
-  \item \textbf{Đo trên hệ thống thật làm lộ điểm nghẽn thật.} Khi đo, đường truyền tới Neon (0,24 giây mỗi lượt đi về) chiếm gần hết thời gian phản hồi của web app, chứ không phải truy vấn.
 \end{itemize}
 
 \subsection{Hạn chế}\label{sec:6.3}
@@ -1467,7 +1426,6 @@ O4 Trải nghiệm xem & BR6 & Mobile 4.0.7 lỗi 2,8\% và 72,7 phàn nàn trê
   \item BR4, BR6, BR7, BR8 dựa hoàn toàn trên hành vi mô phỏng, BR2 và BR5 dựa một phần, phần sau 09/10/2026 (mục 2.3).
   \item Lakehouse xử lý theo vòng micro-batch (7,6 phút mỗi vòng), nên số liệu trên dashboard không real-time; quota Free Edition giới hạn số vòng chạy mỗi ngày.
   \item Neon miễn phí giới hạn 100 CU-giờ mỗi tháng; Debezium giữ compute bật liên tục nên chỉ đủ khoảng 17 ngày.
-  \item Web app chờ đường truyền tới Neon: đọc mất 0,24 giây, ghi một sự kiện mất 2,2--3,8 giây vì nhiều truy vấn nối tiếp.
   \item Trọng số lớp online là heuristic, chưa được học từ dữ liệu; với user hoạt động rất dày, hàm mất 160--380 ms.
   \item Chưa có cảnh báo tự động cho Debezium và sink; Databricks chỉ gửi email khi job lỗi.
   \item Chưa kiểm thử với người dùng thật, và giải pháp thay thế chưa có số đo hiệu năng.
@@ -1628,7 +1586,7 @@ View intent & Mục đích của một lượt mở trang phim: để khám phá
 \subsection*{Phụ lục E. Thiết kế dữ liệu chi tiết}
 \addcontentsline{toc}{subsection}{E. Thiết kế dữ liệu chi tiết}
 
-Phụ lục này liệt kê các bảng của ba tầng bronze, silver, gold, các bảng serving mà web app đọc, và các bảng vận hành, chất lượng dữ liệu. Database của app trên Neon, nguồn của đường CDC, đã được mô tả ở mục 3.3 (Bảng 8, Hình 3); mô hình thực thể của silver ở mục 3.4 (Hình 4).
+Phụ lục này liệt kê các bảng của ba tầng bronze, silver, gold, các bảng serving mà web app đọc, và các bảng vận hành, chất lượng dữ liệu. Database của app trên Neon, nguồn của đường CDC, đã được mô tả ở mục 3.3 (Bảng~\ref{tab:08}, Hình 3); mô hình thực thể của silver ở mục 3.4 (Hình 4).
 
 \textbf{Các bảng của tầng bronze.} Mọi bảng đều có \texttt{\dbsep{}source\dbsep{}file} và \texttt{\dbsep{}ingested\dbsep{}at} .
 
@@ -1705,7 +1663,7 @@ Phụ lục này liệt kê các bảng của ba tầng bronze, silver, gold, c�
 \end{longtable}
 \endgroup
 
-\textbf{Các bảng mart và bảng gợi ý của tầng gold.} Bảng dưới liệt kê 11 bảng còn lại của gold (ngoài 3 dimension và 7 fact ở Bảng 11). Cột Đọc từ lấy từ code của job gold; số dòng đo ngày 08/11/2026.
+\textbf{Các bảng mart và bảng gợi ý của tầng gold.} Bảng dưới liệt kê 11 bảng còn lại của gold (ngoài 3 dimension và 7 fact ở Bảng~\ref{tab:11}). Cột Đọc từ lấy từ code của job gold; số dòng đo ngày 08/11/2026.
 
 \begingroup
 \small
